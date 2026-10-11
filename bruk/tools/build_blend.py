@@ -197,6 +197,26 @@ def frame_sphere(ob):
     cam.rotation_euler = mathutils.Vector(direction).to_track_quat("-Z", "Y").to_euler()
 
 
+def setup_viewports():
+    """Файл відкривається одразу в Material Preview з видом на сфери."""
+    import mathutils
+    for sc in bpy.data.screens:
+        for area in sc.areas:
+            if area.type != "VIEW_3D":
+                continue
+            for sp in area.spaces:
+                if sp.type != "VIEW_3D":
+                    continue
+                sp.shading.type = "MATERIAL"
+                sp.clip_end = 1000
+                r3d = sp.region_3d
+                r3d.view_perspective = "PERSP"
+                r3d.view_location = ((len(schemes) - 1) * 1.4 / 2, -1.5, 0.4)
+                r3d.view_distance = 11
+                r3d.view_rotation = mathutils.Euler((math.radians(68), 0, 0)).to_quaternion()
+
+
+setup_viewports()
 os.makedirs(os.path.dirname(BLEND), exist_ok=True)
 frame_sphere(spheres[schemes[0]["id"]])
 bpy.ops.wm.save_as_mainfile(filepath=BLEND, compress=True)
