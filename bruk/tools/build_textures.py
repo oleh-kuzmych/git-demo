@@ -33,7 +33,9 @@ def texture_extent(px, py):
             ex, ey = n * px, m * py
             if not (850 <= ex <= 1700 and 850 <= ey <= 1700):
                 continue
-            score = abs(ex - ey) / max(ex, ey) + 0.15 * abs(max(ex, ey) - 1200) / 1200
+            if abs(ex - ey) > 1e-6:  # лише квадратні тайли (вимога Lumion та ін.)
+                continue
+            score = abs(max(ex, ey) - 1200) / 1200
             if best is None or score < best[0]:
                 best = (score, n, m)
     _, n, m = best
@@ -166,6 +168,7 @@ def render(scheme, res):
     Image.fromarray(u8(ao * 255)).save(f"{pre}_AO.jpg", quality=90)
     disp = np.clip(height / DISP_RANGE, 0, 1)
     Image.fromarray((disp * 65535).astype(np.uint16)).save(f"{pre}_Displacement.png", optimize=True)
+    Image.fromarray(u8(disp * 255)).save(f"{pre}_Displacement8.jpg", quality=95)  # для Lumion/SketchUp
     return {"texture_mm": [round(ex, 3), round(ey, 3)], "texture_px": [W, H], "repeats": [n, m]}
 
 

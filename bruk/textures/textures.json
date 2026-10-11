@@ -2,11 +2,11 @@
  "01_old_town": {
   "texture_mm": [
    1080,
-   960
+   1080
   ],
   "texture_px": [
    2048,
-   1820
+   2048
   ],
   "repeats": [
    1,
@@ -16,16 +16,16 @@
  },
  "02_rhythm": {
   "texture_mm": [
-   1170,
-   1200
+   960,
+   960
   ],
   "texture_px": [
-   1997,
+   2048,
    2048
   ],
   "repeats": [
-   3,
-   5
+   2,
+   4
   ],
   "displacement_range_mm": 10.0
  },

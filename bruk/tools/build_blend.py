@@ -226,7 +226,7 @@ print("saved", BLEND)
 
 if RENDER:
     for s in schemes:
-        if ONLY and s["id"] != ONLY:
+        if ONLY and s["id"] not in ONLY.split(","):
             continue
         for sid, ob in spheres.items():
             ob.hide_render = sid != s["id"]
