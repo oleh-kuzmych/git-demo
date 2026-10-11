@@ -1,0 +1,152 @@
+{
+ "01_old_town": {
+  "texture_mm": [
+   1080,
+   960
+  ],
+  "texture_px": [
+   2048,
+   1820
+  ],
+  "repeats": [
+   1,
+   1
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "02_rhythm": {
+  "texture_mm": [
+   1170,
+   1200
+  ],
+  "texture_px": [
+   1997,
+   2048
+  ],
+  "repeats": [
+   3,
+   5
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "03_cross_bands": {
+  "texture_mm": [
+   1200,
+   1200
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   10,
+   4
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "04_bands": {
+  "texture_mm": [
+   1440,
+   1440
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   4,
+   3
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "05_framed_square": {
+  "texture_mm": [
+   1200,
+   1200
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   1,
+   1
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "06_herringbone90": {
+  "texture_mm": [
+   1440,
+   1440
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   2,
+   2
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "07_herringbone45": {
+  "texture_mm": [
+   1018.234,
+   1018.234
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   4,
+   6
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "08_basketweave": {
+  "texture_mm": [
+   1440,
+   1440
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   2,
+   2
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "09_pinwheel": {
+  "texture_mm": [
+   1560,
+   1560
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   1,
+   1
+  ],
+  "displacement_range_mm": 10.0
+ },
+ "10_checker": {
+  "texture_mm": [
+   1440,
+   1440
+  ],
+  "texture_px": [
+   2048,
+   2048
+  ],
+  "repeats": [
+   2,
+   2
+  ],
+  "displacement_range_mm": 10.0
+ }
+}

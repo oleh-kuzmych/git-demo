@@ -1,0 +1,326 @@
+<title>Старе місто: схеми викладки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: каталожний аркуш — специфікація зліва, розрахунок справа, далі сітка схем і темна «галерея матеріалів». */
+:root {
+  --bg: #eceef0;
+  --paper: #f8f9fa;
+  --ink: #1b1f23;
+  --muted: #59616a;
+  --line: #c7ccd1;
+  --sand: #9a6a22;
+  --sand-soft: #efe2cc;
+  --joint: #23262a;
+  --s180: #62666b;
+  --s120: #979ba0;
+  --s90: #cdd0d3;
+  --gallery: #161718;
+  --gallery-ink: #e8e9ea;
+  --gallery-muted: #9a9ea3;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181b; --paper: #1d2125; --ink: #e6e8ea; --muted: #9ba3ab; --line: #343a40;
+    --sand: #d9a75c; --sand-soft: #3a2f1f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181b; --paper: #1d2125; --ink: #e6e8ea; --muted: #9ba3ab; --line: #343a40;
+  --sand: #d9a75c; --sand-soft: #3a2f1f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(19px, 2.6vw, 24px); font-weight: 500; }
+h3 { font-size: 16px; font-weight: 500; }
+p { margin: 0; }
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.label { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+a { color: var(--sand); }
+:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
+
+/* header */
+header { display: grid; gap: 14px; border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+.eyebrow { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.lede { max-width: 64ch; color: var(--muted); font-size: 16px; }
+
+/* spec */
+.spec { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 20px; display: grid; gap: 16px; min-width: 0; }
+.stones svg { width: 100%; height: auto; display: block; }
+.stones text { font-family: var(--font-mono); font-size: 11px; fill: var(--muted); }
+.stones .dim { stroke: var(--muted); stroke-width: 0.8; fill: none; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: baseline; }
+th { font-weight: 500; color: var(--muted); }
+td.num, th.num { text-align: right; }
+thead th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tbl { overflow-x: auto; }
+
+/* calculator */
+.calc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field label { font-size: 12px; color: var(--muted); font-weight: 500; }
+input, select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; width: 100%; min-width: 0; }
+input { font-family: var(--font-mono); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 7px 12px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.result { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.result div { background: var(--paper); padding: 10px 12px; display: grid; gap: 2px; }
+.result b { font-family: var(--font-mono); font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.result small { color: var(--muted); font-size: 12px; }
+.pcs { display: grid; gap: 6px; font-size: 14px; }
+.pcs-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center; }
+.sw { width: 14px; height: 14px; border-radius: 2px; border: 1px solid var(--joint); }
+.hint { font-size: 12.5px; color: var(--muted); }
+
+/* schemes */
+.bar { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 22px; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.fig { position: relative; aspect-ratio: 1; background: var(--joint); max-width: 100%; }
+.fig svg { display: block; width: 100%; height: 100%; }
+.fig .tag { position: absolute; left: 10px; top: 10px; background: var(--paper); color: var(--ink); font-family: var(--font-mono); font-size: 12px; padding: 3px 7px; border-radius: 2px; }
+.fig .scale { position: absolute; left: 10px; bottom: 10px; display: grid; gap: 3px; color: #fff; font-family: var(--font-mono); font-size: 11px; text-shadow: 0 1px 2px #000; }
+.fig .scale i { display: block; height: 5px; border: 1.5px solid #fff; border-top: 0; width: 22.22%; min-width: 40px; }
+.sphere { position: absolute; right: 10px; bottom: 10px; width: 30%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--paper), 0 6px 18px rgba(0,0,0,.45); background: var(--gallery); }
+.sphere img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.22); display: block; }
+.body { padding: 16px 18px 18px; display: grid; gap: 12px; align-content: start; }
+.title-row { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.note { color: var(--muted); font-size: 14px; }
+.share { display: flex; height: 8px; border-radius: 2px; overflow: hidden; border: 1px solid var(--joint); }
+.share span { display: block; height: 100%; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.use { display: inline-block; font-size: 12px; background: var(--sand-soft); color: var(--ink); padding: 2px 8px; border-radius: 2px; }
+
+/* gallery */
+.gallery { background: var(--gallery); color: var(--gallery-ink); border-radius: 6px; padding: 28px 22px; display: grid; gap: 22px; }
+.gallery .label { color: var(--gallery-muted); }
+.gallery p { color: var(--gallery-muted); max-width: 70ch; }
+.mats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 14px; }
+.mat { background: #222426; border-radius: 10px; padding: 10px 10px 12px; display: grid; gap: 8px; }
+.mat img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; display: block; }
+.mat b { font-weight: 500; font-size: 13px; color: var(--gallery-ink); }
+.mat small { color: var(--gallery-muted); font-size: 12px; }
+
+/* files */
+.files { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.file { border-top: 2px solid var(--ink); padding-top: 10px; display: grid; gap: 6px; align-content: start; }
+.file code { font-family: var(--font-mono); font-size: 12.5px; color: var(--sand); word-break: break-all; }
+.file p { font-size: 14px; color: var(--muted); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 820px) {
+  .spec { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 420px) {
+  .calc-grid, .result { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .2s ease; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="label">Бруківка · колір сірий</span><span class="label">Формати 90 · 120 · 180 × 120 мм</span><span class="label">Дані: unibruk.com.ua</span></div>
+    <h1>Старе місто, сіра: 10 схем викладки</h1>
+    <p class="lede">Усі схеми побудовані тільки з трьох форматів цієї бруківки й перевірені на точне покриття без щілин. Для кожної схеми є креслення, витрата каменю кожного формату на 1 м² і PBR-матеріал для візуалізації.</p>
+  </header>
+
+  <section class="spec" aria-labelledby="spec-h">
+    <div class="panel">
+      <div class="label" id="spec-h">Характеристики</div>
+      <div class="stones" id="stones"></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Параметр</th><th class="num">45 мм</th><th class="num">60 мм</th></tr></thead>
+          <tbody>
+            <tr><th>На піддоні, м²</th><td class="num mono">16,85</td><td class="num mono">14,04</td></tr>
+            <tr><th>Вага 1 м², кг</th><td class="num mono">102,3</td><td class="num mono">136,8</td></tr>
+            <tr><th>Ціна заводу, грн/м² з ПДВ</th><td class="num mono">630,00</td><td class="num mono">695,00</td></tr>
+            <tr><th>Вага піддону, т</th><td class="num mono">≈1,72</td><td class="num mono">≈1,92</td></tr>
+            <tr><th>Призначення</th><td style="text-align:right">пішохідні зони</td><td style="text-align:right">заїзд авто</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">Ціна — самовивіз зі складу виробника. Вага піддону розрахована: м² на піддоні × вага 1 м², без ваги самого піддону.</p>
+    </div>
+
+    <div class="panel" aria-labelledby="calc-h">
+      <div class="label" id="calc-h">Розрахунок замовлення</div>
+      <div class="calc-grid">
+        <div class="field"><label for="area">Площа, м²</label><input id="area" type="number" min="1" step="0.5" value="40" inputmode="decimal"></div>
+        <div class="field"><label for="reserve">Запас на підрізку, %</label><input id="reserve" type="number" min="0" max="30" step="1" value="5" inputmode="numeric"></div>
+        <div class="field" style="grid-column: 1 / -1"><label for="scheme">Схема</label><select id="scheme"></select></div>
+        <div class="field"><label>Висота каменю</label>
+          <div class="seg" role="group" aria-label="Висота каменю"><button type="button" data-h="45" aria-pressed="true">45 мм</button><button type="button" data-h="60" aria-pressed="false">60 мм</button></div>
+        </div>
+      </div>
+      <div class="result" id="result"></div>
+      <div class="pcs" id="pcs"></div>
+      <p class="hint" id="calc-hint"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="schemes-h" style="display:grid; gap:18px">
+    <div class="bar">
+      <h2 id="schemes-h">Схеми викладки</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+        <div class="legend" id="legend"></div>
+        <div class="seg" role="group" aria-label="Відображення"><button type="button" data-mode="size" aria-pressed="true">За форматом</button><button type="button" data-mode="real" aria-pressed="false">Як у житті</button></div>
+      </div>
+    </div>
+    <p class="hint">Фрагмент 1,8 × 1,8 м у масштабі. Відтінки показують формат каменю; «Як у житті» — усі камені сірі, як ви їх отримаєте.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="gallery" aria-labelledby="gal-h">
+    <div style="display:grid; gap:8px">
+      <div class="label">Blender · Cycles</div>
+      <h2 id="gal-h">PBR-матеріали</h2>
+      <p>Безшовні текстури для кожної схеми: колір, нормалі, шорсткість, AO та карта висот (шов 4 мм, фаска 6 мм, глибина рельєфу до 10 мм). Сфери відрендерені з цих самих файлів.</p>
+    </div>
+    <div class="mats" id="mats"></div>
+  </section>
+
+  <section aria-labelledby="files-h" style="display:grid; gap:16px">
+    <h2 id="files-h">Файли для архітектора</h2>
+    <p class="hint">Усе лежить у репозиторії <a href="https://github.com/oleh-kuzmych/git-demo/tree/claude/paving-layout-schemes-8e34va/bruk" target="_blank" rel="noopener">oleh-kuzmych/git-demo → bruk/</a>. Розміри в міліметрах, 1:1.</p>
+    <div class="files">
+      <div class="file"><h3>Blender</h3><code>blender/bruk_schemes.blend</code><p>10 матеріалів, позначених як Assets, сфери-прев'ю та майданчик 4×4 м. Перетягніть матеріал з Asset Browser на свій об'єкт.</p></div>
+      <div class="file"><h3>PBR-текстури</h3><code>textures/&lt;схема&gt;/*.jpg, *.png</code><p>BaseColor, Normal (OpenGL), Roughness, AO, Displacement 16 біт. Розмір тайла в мм — у textures.json. Підходять для Archicad, Twinmotion, Lumion, Enscape, 3ds Max.</p></div>
+      <div class="file"><h3>Креслення DXF</h3><code>dxf/&lt;схема&gt;.dxf</code><p>Ділянка 2,4 × 2,4 м з підрізкою країв і блок модуля для масиву. Шари за форматами: BRUK_180x120, BRUK_120x120, BRUK_90x120, BRUK_CUT.</p></div>
+      <div class="file"><h3>SVG і дані</h3><code>svg/*.svg · schemes.json</code><p>Векторні схеми для презентацій і координати кожного каменю в модулі. Генератор у tools/ перебудовує все одним запуском.</p></div>
+    </div>
+  </section>
+
+  <footer>Характеристики та ціни взято зі сторінки виробника на скриншоті; перед замовленням уточніть актуальну ціну і чи продаються формати окремо, бо в різних схемах співвідношення форматів різне.</footer>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const SIZES = { '180x120': [180, 120], '120x120': [120, 120], '90x120': [90, 120] };
+  const ORDER = ['180x120', '120x120', '90x120'];
+  const VAR = { '180x120': 'var(--s180)', '120x120': 'var(--s120)', '90x120': 'var(--s90)' };
+  const NAME = { '180x120': '180×120', '120x120': '120×120', '90x120': '90×120' };
+  const fmt = (v, d = 0) => v.toLocaleString('uk-UA', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  let mode = store.get('bruk-mode') || 'size';
+  let height = Number(store.get('bruk-h')) || 45;
+
+  // To-scale drawing of the three formats
+  (function drawStones() {
+    const s = 0.9, gap = 26, y0 = 34;
+    let x = 44, out = '';
+    for (const k of ['90x120', '120x120', '180x120']) {
+      const [w, h] = SIZES[k];
+      out += `<rect x="${x}" y="${y0}" width="${w * s}" height="${h * s}" rx="5" fill="${VAR[k]}" stroke="var(--joint)" stroke-width="1.5"/>`;
+      out += `<path class="dim" d="M${x} ${y0 - 10}h${w * s}M${x} ${y0 - 14}v8M${x + w * s} ${y0 - 14}v8"/>`;
+      out += `<text x="${x + w * s / 2}" y="${y0 - 16}" text-anchor="middle">${w}</text>`;
+      x += w * s + gap;
+    }
+    out += `<path class="dim" d="M34 ${y0}v${120 * s}M30 ${y0}h8M30 ${y0 + 120 * s}h8"/>`;
+    out += `<text x="26" y="${y0 + 60 * s + 4}" text-anchor="end">120</text>`;
+    const W = x - gap + 10;
+    out += `<text x="${W}" y="${y0 + 120 * s + 22}" text-anchor="end">мм · висота 45 або 60</text>`;
+    document.getElementById('stones').innerHTML = `<svg viewBox="0 0 ${W + 4} ${y0 + 120 * s + 30}" role="img" aria-label="Три формати каменю в масштабі: 90×120, 120×120, 180×120 мм">${out}</svg>`;
+  })();
+
+  document.getElementById('legend').innerHTML = ORDER.map(k => `<span><i class="sw" style="background:${VAR[k]}"></i>${NAME[k]}</span>`).join('');
+
+  function hash(x, y) { let h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return h - Math.floor(h); }
+  const V = 1800;
+  function schemeSVG(s) {
+    const [px, py] = s.period_mm;
+    let out = '';
+    const reach = 200;
+    for (let i = Math.floor(-reach / px); i <= Math.ceil((V + reach) / px); i++) {
+      for (let j = Math.floor(-reach / py); j <= Math.ceil((V + reach) / py); j++) {
+        for (const [cx0, cy0, w, h, a, k] of s.stones) {
+          const cx = cx0 + i * px, cy = cy0 + j * py;
+          if (cx < -reach || cx > V + reach || cy < -reach || cy > V + reach) continue;
+          let fill = VAR[k];
+          if (mode === 'real') { const t = hash(Math.round(cx), Math.round(cy)); fill = `hsl(210 3% ${50 + t * 9}%)`; }
+          const tr = a ? ` transform="rotate(${a} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : '';
+          out += `<rect x="${(cx - w / 2 + 2).toFixed(1)}" y="${(cy - h / 2 + 2).toFixed(1)}" width="${w - 4}" height="${h - 4}" rx="7" fill="${fill}"${tr}/>`;
+        }
+      }
+    }
+    return `<svg viewBox="0 0 ${V} ${V}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Схема ${s.name}">${out}</svg>`;
+  }
+
+  const grid = document.getElementById('grid');
+  function renderGrid() {
+    grid.innerHTML = D.schemes.map((s, n) => {
+      const st = s.stats;
+      const share = ORDER.filter(k => st[k].area_share > 0).map(k => `<span style="width:${st[k].area_share * 100}%;background:${VAR[k]}" title="${NAME[k]}: ${fmt(st[k].area_share * 100)}%"></span>`).join('');
+      const pcs = ORDER.filter(k => st[k].pcs_per_m2 > 0).map(k => `<dt>${NAME[k]}</dt><dd>${fmt(st[k].pcs_per_m2, 1)} шт/м² · ${fmt(st[k].area_share * 100)}%</dd>`).join('');
+      const img = D.previews[s.id] ? `<div class="sphere"><img src="${D.previews[s.id]}" alt="Матеріал ${s.name} на сфері"></div>` : '';
+      return `<article class="card" id="s${s.id.slice(0, 2)}">
+        <div class="fig">${schemeSVG(s)}<span class="tag">${s.id.slice(0, 2)}</span>
+          <div class="scale"><span>0,4 м</span><i></i></div>${img}</div>
+        <div class="body">
+          <div class="title-row"><h3>${s.name}</h3><span class="use">${s.use}</span></div>
+          <p class="note">${s.note}</p>
+          <div class="share" aria-hidden="true">${share}</div>
+          <dl class="kv">${pcs}<dt>Модуль</dt><dd>${fmt(s.period_mm[0])} × ${fmt(s.period_mm[1])} мм</dd><dt>Підрізка на 2,4×2,4 м</dt><dd>${s.area_sample.cut} з ${s.area_sample.cut + s.area_sample.whole} шт</dd></dl>
+        </div></article>`;
+    }).join('');
+  }
+
+  document.getElementById('mats').innerHTML = D.schemes.map(s => `<div class="mat">${D.previews[s.id] ? `<img src="${D.previews[s.id]}" alt="Сфера з матеріалом ${s.name}" loading="lazy">` : ''}<b>${s.name}</b><small>Bruk_${s.id} · ${D.textures[s.id].texture_mm.map(v => fmt(v)).join(' × ')} мм</small></div>`).join('');
+
+  // calculator
+  const sel = document.getElementById('scheme');
+  sel.innerHTML = D.schemes.map(s => `<option value="${s.id}">${s.id.slice(0, 2)} · ${s.name}</option>`).join('');
+  const saved = store.get('bruk-scheme'); if (saved && D.schemes.some(s => s.id === saved)) sel.value = saved;
+  const area = document.getElementById('area'), reserve = document.getElementById('reserve');
+  function calc() {
+    const s = D.schemes.find(x => x.id === sel.value);
+    const v = D.product.variants.find(x => x.height_mm === height);
+    const a = Math.max(0, parseFloat(String(area.value).replace(',', '.')) || 0);
+    const r = Math.max(0, parseFloat(String(reserve.value).replace(',', '.')) || 0);
+    const total = a * (1 + r / 100);
+    const pallets = total / v.m2_per_pallet;
+    document.getElementById('result').innerHTML = `
+      <div><small>Замовити</small><b>${fmt(total, 1)} м²</b></div>
+      <div><small>Піддонів по ${fmt(v.m2_per_pallet, 2)} м²</small><b>${fmt(pallets, 2)}</b></div>
+      <div><small>Вага каменю</small><b>${fmt(total * v.kg_per_m2 / 1000, 2)} т</b></div>
+      <div><small>Вартість з ПДВ</small><b>${fmt(Math.round(total * v.price_uah_m2))} грн</b></div>`;
+    document.getElementById('pcs').innerHTML = ORDER.filter(k => s.stats[k].pcs_per_m2 > 0).map(k => `<div class="pcs-row"><i class="sw" style="background:${VAR[k]}"></i><span>${NAME[k]} · ${fmt(s.stats[k].area_share * 100)}% площі</span><span class="num">≈${fmt(Math.ceil(total * s.stats[k].pcs_per_m2))} шт · ${fmt(total * s.stats[k].area_share, 1)} м²</span></div>`).join('');
+    const diag = s.id.includes('45');
+    document.getElementById('calc-hint').textContent = diag
+      ? 'Для ялинки під 45° закладайте 8–10% запасу: біля кожного краю камінь підрізається.'
+      : 'Запас 5% покриває підрізку біля бордюрів і бій. Кількість штук округлена вгору.';
+  }
+  [area, reserve, sel].forEach(el => el.addEventListener('input', () => { store.set('bruk-scheme', sel.value); calc(); }));
+  document.querySelectorAll('[data-h]').forEach(b => b.addEventListener('click', () => {
+    height = Number(b.dataset.h); store.set('bruk-h', String(height));
+    document.querySelectorAll('[data-h]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); calc();
+  }));
+  document.querySelectorAll('[data-h]').forEach(x => x.setAttribute('aria-pressed', String(Number(x.dataset.h) === height)));
+  document.querySelectorAll('[data-mode]').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    b.addEventListener('click', () => {
+      mode = b.dataset.mode; store.set('bruk-mode', mode);
+      document.querySelectorAll('[data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderGrid();
+    });
+  });
+  renderGrid(); calc();
+})();
+</script>
