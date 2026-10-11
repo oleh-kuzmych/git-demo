@@ -26,6 +26,7 @@ schemes = json.load(open(os.path.join(ROOT, "schemes.json"), encoding="utf-8"))[
 tex_meta = json.load(open(os.path.join(ROOT, "textures", "textures.json")))
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
+bpy.context.preferences.filepaths.save_version = 0
 scene = bpy.context.scene
 scene.unit_settings.system = "METRIC"
 scene.unit_settings.length_unit = "MILLIMETERS"
@@ -198,8 +199,9 @@ def frame_sphere(ob):
 
 os.makedirs(os.path.dirname(BLEND), exist_ok=True)
 frame_sphere(spheres[schemes[0]["id"]])
+bpy.ops.wm.save_as_mainfile(filepath=BLEND, compress=True)
 bpy.ops.file.make_paths_relative()
-bpy.ops.wm.save_as_mainfile(filepath=BLEND, relative_remap=True, compress=True)
+bpy.ops.wm.save_as_mainfile(filepath=BLEND, compress=True)
 print("saved", BLEND)
 
 if RENDER:
