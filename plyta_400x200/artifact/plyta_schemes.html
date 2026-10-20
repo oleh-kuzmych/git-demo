@@ -1,0 +1,325 @@
+<title>Плита 400×200: схеми викладки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: каталожний аркуш — специфікація зліва, розрахунок справа, далі сітка схем і темна «галерея матеріалів». */
+:root {
+  --bg: #eceef0;
+  --paper: #f8f9fa;
+  --ink: #1b1f23;
+  --muted: #59616a;
+  --line: #c7ccd1;
+  --sand: #9a6a22;
+  --sand-soft: #efe2cc;
+  --joint: #23262a;
+  --sh: #bab4ae;
+  --sv: #5e5957;
+  --gallery: #161718;
+  --gallery-ink: #e8e9ea;
+  --gallery-muted: #9a9ea3;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181b; --paper: #1d2125; --ink: #e6e8ea; --muted: #9ba3ab; --line: #343a40;
+    --sand: #d9a75c; --sand-soft: #3a2f1f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181b; --paper: #1d2125; --ink: #e6e8ea; --muted: #9ba3ab; --line: #343a40;
+  --sand: #d9a75c; --sand-soft: #3a2f1f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(19px, 2.6vw, 24px); font-weight: 500; }
+h3 { font-size: 16px; font-weight: 500; }
+p { margin: 0; }
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.label { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+a { color: var(--sand); }
+:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
+
+/* header */
+header { display: grid; gap: 14px; border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+.eyebrow { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.lede { max-width: 64ch; color: var(--muted); font-size: 16px; }
+
+/* spec */
+.spec { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 20px; display: grid; gap: 16px; min-width: 0; }
+.stones svg { width: 100%; height: auto; display: block; }
+.stones text { font-family: var(--font-mono); font-size: 11px; fill: var(--muted); }
+.stones .dim { stroke: var(--muted); stroke-width: 0.8; fill: none; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: baseline; }
+th { font-weight: 500; color: var(--muted); }
+td.num, th.num { text-align: right; }
+thead th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tbl { overflow-x: auto; }
+
+/* calculator */
+.calc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field label { font-size: 12px; color: var(--muted); font-weight: 500; }
+input, select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; width: 100%; min-width: 0; }
+input { font-family: var(--font-mono); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 7px 12px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.result { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.result div { background: var(--paper); padding: 10px 12px; display: grid; gap: 2px; }
+.result b { font-family: var(--font-mono); font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.result small { color: var(--muted); font-size: 12px; }
+.pcs { display: grid; gap: 6px; font-size: 14px; }
+.pcs-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center; }
+.sw { width: 14px; height: 14px; border-radius: 2px; border: 1px solid var(--joint); }
+.hint { font-size: 12.5px; color: var(--muted); }
+
+/* schemes */
+.bar { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 22px; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.fig { position: relative; aspect-ratio: 1; background: var(--joint); max-width: 100%; }
+.fig svg { display: block; width: 100%; height: 100%; }
+.fig .tag { position: absolute; left: 10px; top: 10px; background: var(--paper); color: var(--ink); font-family: var(--font-mono); font-size: 12px; padding: 3px 7px; border-radius: 2px; }
+.fig .scale { position: absolute; left: 10px; bottom: 10px; display: grid; gap: 3px; color: #fff; font-family: var(--font-mono); font-size: 11px; text-shadow: 0 1px 2px #000; }
+.fig .scale i { display: block; height: 5px; border: 1.5px solid #fff; border-top: 0; width: 22.22%; min-width: 40px; }
+.sphere { position: absolute; right: 10px; bottom: 10px; width: 30%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--paper), 0 6px 18px rgba(0,0,0,.45); background: var(--gallery); }
+.sphere img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.22); display: block; }
+.body { padding: 16px 18px 18px; display: grid; gap: 12px; align-content: start; }
+.title-row { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.note { color: var(--muted); font-size: 14px; }
+.share { display: flex; height: 8px; border-radius: 2px; overflow: hidden; border: 1px solid var(--joint); }
+.share span { display: block; height: 100%; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.use { display: inline-block; font-size: 12px; background: var(--sand-soft); color: var(--ink); padding: 2px 8px; border-radius: 2px; }
+
+/* gallery */
+.gallery { background: var(--gallery); color: var(--gallery-ink); border-radius: 6px; padding: 28px 22px; display: grid; gap: 22px; }
+.gallery .label { color: var(--gallery-muted); }
+.gallery p { color: var(--gallery-muted); max-width: 70ch; }
+.mats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 14px; }
+.mat { background: #222426; border-radius: 10px; padding: 10px 10px 12px; display: grid; gap: 8px; }
+.mat img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; display: block; }
+.mat b { font-weight: 500; font-size: 13px; color: var(--gallery-ink); }
+.mat small { color: var(--gallery-muted); font-size: 12px; }
+
+/* files */
+.files { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.file { border-top: 2px solid var(--ink); padding-top: 10px; display: grid; gap: 6px; align-content: start; }
+.file code { font-family: var(--font-mono); font-size: 12.5px; color: var(--sand); word-break: break-all; }
+.file p { font-size: 14px; color: var(--muted); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 820px) {
+  .spec { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 420px) {
+  .calc-grid, .result { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .2s ease; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="label">Плита тротуарна · колормікс</span><span class="label">400 × 200 × 60 мм</span><span class="label">Дані: ТЗ на форму ВР-2664 і фото</span></div>
+    <h1>Плита 400×200×60: 10 схем викладки</h1>
+    <p class="lede">Усі схеми побудовані з однієї плити 400×200 і перевірені на точне покриття без щілин. Для кожної є креслення, кількість підрізки та PBR-матеріал колорміксу, знятий з фото вашої викладки.</p>
+  </header>
+
+  <section class="spec" aria-labelledby="spec-h">
+    <div class="panel">
+      <div class="label" id="spec-h">Характеристики</div>
+      <div class="stones" id="stones"></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Параметр</th><th class="num">Значення</th></tr></thead>
+          <tbody>
+            <tr><th>Номінальний розмір</th><td class="num mono">400 × 200 × 60 мм</td></tr>
+            <tr><th>Внутрішній розмір форми</th><td class="num mono">398 × 198 мм</td></tr>
+            <tr><th>Радіус кутів у плані</th><td class="num mono">R5</td></tr>
+            <tr><th>Плит на 1 м²</th><td class="num mono">12,5 шт</td></tr>
+            <tr><th>Вага 1 м²</th><td class="num mono">≈138 кг*</td></tr>
+            <tr><th>Вага 1 плити</th><td class="num mono">≈11 кг*</td></tr>
+            <tr><th>Колір</th><td style="text-align:right">колормікс: графіт, коричнево-сірий, бежевий</td></tr>
+            <tr><th>Форма за цикл</th><td class="num mono">9 шт (3 × 3)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">* Розрахунково для бетону 2300 кг/м³: у кресленні вага не вказана. Ціну та кількість на піддоні введіть у калькуляторі.</p>
+    </div>
+
+    <div class="panel" aria-labelledby="calc-h">
+      <div class="label" id="calc-h">Розрахунок замовлення</div>
+      <div class="calc-grid">
+        <div class="field"><label for="area">Площа, м²</label><input id="area" type="number" min="1" step="0.5" value="40" inputmode="decimal"></div>
+        <div class="field"><label for="reserve">Запас на підрізку, %</label><input id="reserve" type="number" min="0" max="30" step="1" value="5" inputmode="numeric"></div>
+        <div class="field" style="grid-column: 1 / -1"><label for="scheme">Схема</label><select id="scheme"></select></div>
+        <div class="field"><label for="price">Ціна, грн/м²</label><input id="price" type="number" min="0" step="1" placeholder="напр. 520" inputmode="decimal"></div>
+        <div class="field"><label for="pallet">М² на піддоні</label><input id="pallet" type="number" min="0" step="0.01" placeholder="уточніть" inputmode="decimal"></div>
+      </div>
+      <div class="result" id="result"></div>
+      <div class="pcs" id="pcs"></div>
+      <p class="hint" id="calc-hint"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="schemes-h" style="display:grid; gap:18px">
+    <div class="bar">
+      <h2 id="schemes-h">Схеми викладки</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+        <div class="legend" id="legend"></div>
+        <div class="seg" role="group" aria-label="Відображення"><button type="button" data-mode="size" aria-pressed="true">Схема</button><button type="button" data-mode="real" aria-pressed="false">Колормікс</button></div>
+      </div>
+    </div>
+    <p class="hint">Фрагмент 2,4 × 2,4 м у масштабі. У режимі «Схема» світлі плити лежать поздовжньо, темні — поперек; «Колормікс» — як виглядатиме в житті.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="gallery" aria-labelledby="gal-h">
+    <div style="display:grid; gap:8px">
+      <div class="label">Blender · Cycles</div>
+      <h2 id="gal-h">PBR-матеріали</h2>
+      <p>Безшовні текстури для кожної схеми: колір, нормалі, шорсткість, AO та карта висот (шов 3 мм, фаска 5 мм, кути R5). Кожна плита має свій тон і плями колорміксу. Сфери відрендерені з цих самих файлів.</p>
+    </div>
+    <div class="mats" id="mats"></div>
+  </section>
+
+  <section aria-labelledby="files-h" style="display:grid; gap:16px">
+    <h2 id="files-h">Файли для архітектора</h2>
+    <p class="hint">Усе лежить у репозиторії <a href="https://github.com/oleh-kuzmych/git-demo/tree/claude/paving-layout-schemes-8e34va/plyta_400x200" target="_blank" rel="noopener">oleh-kuzmych/git-demo → plyta_400x200/</a>. Розміри в міліметрах, 1:1.</p>
+    <div class="files">
+      <div class="file"><h3>Blender</h3><code>blender/plyta_schemes.blend</code><p>10 матеріалів Plyta_*, позначених як Assets, сфери-прев'ю та майданчик 4×4 м. Відкривається одразу в Material Preview, потрібен Blender 5.0+.</p></div>
+      <div class="file"><h3>PBR-текстури</h3><code>textures/&lt;схема&gt;/*.jpg, *.png</code><p>Квадратні тайли 2048 px: BaseColor, Normal (OpenGL), Roughness, AO, Displacement (16 біт і 8 біт для Lumion). Розмір тайла в мм — у textures.json. Підходять для Archicad, Lumion 11+, Twinmotion, Enscape, 3ds Max.</p></div>
+      <div class="file"><h3>Креслення DXF</h3><code>dxf/&lt;схема&gt;.dxf</code><p>Ділянка 2,4 × 2,4 м з підрізкою країв і блок модуля для масиву. Шари: PLYTA_H (поздовжні), PLYTA_V (поперечні), PLYTA_CUT (підрізані).</p></div>
+      <div class="file"><h3>SVG і дані</h3><code>svg/*.svg · schemes.json</code><p>Векторні схеми для презентацій і координати кожного каменю в модулі. Генератор у tools/ перебудовує все одним запуском.</p></div>
+    </div>
+  </section>
+
+  <footer>Розміри взято з технічного завдання на форму ВР-2664, колір — з фото викладки. Вагу розраховано, ціну й кількість на піддоні уточніть у виробника.</footer>
+</div>
+
+<script type="application/json" id="data">{"product":{"name":"Плита тротуарна 400×200×60","source":"технічне завдання на форму ВР-2664 (03.2021) + фото викладки","color":"Колормікс: графіт, коричнево-сірий, бежевий","size_mm":[400,200,60],"mold_inner_mm":[398,198],"corner_radius_mm":5,"pcs_per_m2":12.5,"kg_per_m2_est":138},"area_mm":2400,"schemes":[{"id":"01_running_half","name":"Ложкова ½","note":"Ряди зі зсувом на пів плити, як на фото. Найпростіша у викладці, мінімум підрізки.","use":"Тротуари, тераси, двори","period_mm":[400,400],"stones":[[200.0,100.0,400,200,0,"H"],[0.0,300.0,400,200,0,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":1.0},"area_sample":{"whole":66,"cut":12}},{"id":"02_running_third","name":"Ложкова ⅓","note":"Кожен ряд зсунутий на третину плити. Шви утворюють пологу діагональ, менше «смугастості».","use":"Тротуари, тераси","period_mm":[400,600],"stones":[[200.0,100.0,400,200,0,"H"],[333.333,300.0,400,200,0,"H"],[66.667,500.0,400,200,0,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":1.0},"area_sample":{"whole":64,"cut":16}},{"id":"03_stack","name":"Сітка","note":"Прямі наскрізні шви в обох напрямках. Сучасний строгий вигляд, вимагає точної основи.","use":"Тераси, зони біля будинку","period_mm":[400,200],"stones":[[200.0,100.0,400,200,0,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":1.0},"area_sample":{"whole":72,"cut":0}},{"id":"04_herringbone90","name":"Ялинка 90°","note":"Класична ялинка 2:1. Найкраще розподіляє навантаження серед усіх схем.","use":"Двори, під'їзди","period_mm":[800,800],"stones":[[100.0,400.0,200,400,0,"V"],[200.0,100.0,400,200,0,"H"],[500.0,0.0,200,400,0,"V"],[0.0,700.0,400,200,0,"H"],[300.0,600.0,200,400,0,"V"],[400.0,300.0,400,200,0,"H"],[700.0,200.0,200,400,0,"V"],[600.0,500.0,400,200,0,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":0.5},"area_sample":{"whole":66,"cut":12}},{"id":"05_herringbone45","name":"Ялинка 45°","note":"Ялинка під кутом 45° до бордюру. Найвиразніша, але найбільше підрізки біля країв.","use":"Під'їзди, вхідні зони","period_mm":[565.685,282.843],"stones":[[353.553,70.711,200,400,45,"V"],[70.711,212.132,400,200,45,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":0.5},"area_sample":{"whole":49,"cut":37}},{"id":"06_running45","name":"Ложкова 45°","note":"Ложкова перев'язка, повернута на 45°. Візуально розширює вузький простір.","use":"Доріжки, майданчики","period_mm":[282.843,282.843],"stones":[[70.711,212.132,400,200,45,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":1.0},"area_sample":{"whole":49,"cut":41}},{"id":"07_basketweave","name":"Плетінка","note":"Пари плит утворюють квадрати 400×400, що чергуються горизонтально й вертикально.","use":"Тераси, патіо","period_mm":[800,800],"stones":[[200,100,400,200,0,"H"],[200,300,400,200,0,"H"],[100,600,200,400,0,"V"],[300,600,200,400,0,"V"],[500,200,200,400,0,"V"],[700,200,200,400,0,"V"],[600,500,400,200,0,"H"],[600,700,400,200,0,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":0.5},"area_sample":{"whole":72,"cut":0}},{"id":"08_t_weave","name":"Т-плетінка","note":"Блоки «Т» і «⊥» чергуються: поздовжня плита то над, то під парою поперечних, утворюючи зигзаг.","use":"Доріжки, тераси","period_mm":[800,600],"stones":[[200,100,400,200,0,"H"],[100,400,200,400,0,"V"],[300,400,200,400,0,"V"],[600,500,400,200,0,"H"],[500,200,200,400,0,"V"],[700,200,200,400,0,"V"]],"stats":{"pcs_per_m2":12.5,"share_H":0.333},"area_sample":{"whole":72,"cut":0}},{"id":"09_cross_band","name":"Поперечна смуга","note":"Два ряди ложкової перев'язки, далі смуга з плит упоперек. Ритм для довгих доріжок.","use":"Довгі доріжки, тротуари","period_mm":[400,800],"stones":[[200,100,400,200,0,"H"],[0,300,400,200,0,"H"],[100,600,200,400,0,"V"],[300,600,200,400,0,"V"]],"stats":{"pcs_per_m2":12.5,"share_H":0.5},"area_sample":{"whole":69,"cut":6}},{"id":"10_pinwheel","name":"Вітряк","note":"Лопаті з чотирьох поперечних плит обертаються навколо квадрата з двох плит.","use":"Площі, акцентні зони","period_mm":[2000,2000],"stones":[[200,100,400,200,0,"H"],[200,300,400,200,0,"H"],[600,100,400,200,0,"H"],[600,300,400,200,0,"H"],[600,500,400,200,0,"H"],[600,700,400,200,0,"H"],[100,600.0,200,400,0,"V"],[300,600.0,200,400,0,"V"],[200,900,400,200,0,"H"],[200,1100,400,200,0,"H"],[200,1300,400,200,0,"H"],[200,1500,400,200,0,"H"],[1800,100,400,200,0,"H"],[1800,300,400,200,0,"H"],[1000,500,400,200,0,"H"],[1000,700,400,200,0,"H"],[900,200.0,200,400,0,"V"],[1100,200.0,200,400,0,"V"],[1300,200.0,200,400,0,"V"],[1500,200.0,200,400,0,"V"],[1400,500,400,200,0,"H"],[1400,700,400,200,0,"H"],[1400,900,400,200,0,"H"],[1400,1100,400,200,0,"H"],[600,1300,400,200,0,"H"],[600,1500,400,200,0,"H"],[500,1000.0,200,400,0,"V"],[700,1000.0,200,400,0,"V"],[900,1000.0,200,400,0,"V"],[1100,1000.0,200,400,0,"V"],[1000,1300,400,200,0,"H"],[1000,1500,400,200,0,"H"],[1000,1700,400,200,0,"H"],[1000,1900,400,200,0,"H"],[100,1800.0,200,400,0,"V"],[300,1800.0,200,400,0,"V"],[500,1800.0,200,400,0,"V"],[700,1800.0,200,400,0,"V"],[1800,900,400,200,0,"H"],[1800,1100,400,200,0,"H"],[1700,600.0,200,400,0,"V"],[1900,600.0,200,400,0,"V"],[1400,1700,400,200,0,"H"],[1400,1900,400,200,0,"H"],[1300,1400.0,200,400,0,"V"],[1500,1400.0,200,400,0,"V"],[1700,1400.0,200,400,0,"V"],[1900,1400.0,200,400,0,"V"],[1800,1700,400,200,0,"H"],[1800,1900,400,200,0,"H"]],"stats":{"pcs_per_m2":12.5,"share_H":0.6},"area_sample":{"whole":72,"cut":0}}],"textures":{"01_running_half":{"texture_mm":[1600,1600],"texture_px":[2048,2048],"repeats":[4,4],"displacement_range_mm":10.0},"02_running_third":{"texture_mm":[1200,1200],"texture_px":[2048,2048],"repeats":[3,2],"displacement_range_mm":10.0},"03_stack":{"texture_mm":[1600,1600],"texture_px":[2048,2048],"repeats":[4,8],"displacement_range_mm":10.0},"04_herringbone90":{"texture_mm":[1600,1600],"texture_px":[2048,2048],"repeats":[2,2],"displacement_range_mm":10.0},"05_herringbone45":{"texture_mm":[1697.056,1697.056],"texture_px":[2048,2048],"repeats":[3,6],"displacement_range_mm":10.0},"06_running45":{"texture_mm":[1697.056,1697.056],"texture_px":[2048,2048],"repeats":[6,6],"displacement_range_mm":10.0},"07_basketweave":{"texture_mm":[1600,1600],"texture_px":[2048,2048],"repeats":[2,2],"displacement_range_mm":10.0},"08_t_weave":{"texture_mm":[2400,2400],"texture_px":[2048,2048],"repeats":[3,4],"displacement_range_mm":10.0},"09_cross_band":{"texture_mm":[1600,1600],"texture_px":[2048,2048],"repeats":[4,2],"displacement_range_mm":10.0},"10_pinwheel":{"texture_mm":[2000,2000],"texture_px":[2048,2048],"repeats":[1,1],"displacement_range_mm":10.0}},"previews":{"01_running_half":"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD//gA4QmxlbmRlcjpjeWNsZXMuVmlld0xheWVyLnN5bmNocm9uaXphdGlvbl90aW1lOjAwOjM4LjM0/9sAQwAFBAQEBAMFBAQEBgUFBggNCAgHBwgQCwwJDRMQFBMSEBISFBcdGRQWHBYSEhojGhweHyEhIRQZJCckICYdICEg/9sAQwEFBgYIBwgPCAgPIBUSFSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg/8AAEQgBaAFoAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A+UqKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKK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"}}</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const ORDER = ['H', 'V'];
+  const VAR = { H: 'var(--sh)', V: 'var(--sv)' };
+  const NAME = { H: 'поздовжня', V: 'поперечна' };
+  const MIX = [[94, 94, 97], [114, 112, 112], [113, 104, 100], [128, 122, 118]];
+  const fmt = (v, d = 0) => v.toLocaleString('uk-UA', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  let mode = store.get('plyta-mode') || 'size';
+
+  // To-scale drawing of the plate: plan + section
+  (function drawPlate() {
+    const k = 0.62, x0 = 34, y0 = 30, w = 400 * k, h = 200 * k, sx = x0 + w + 46, sh = 60 * k;
+    let o = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="${5 * k}" fill="var(--sh)" stroke="var(--joint)" stroke-width="1.5"/>`;
+    o += `<rect x="${x0 + 3}" y="${y0 + 3}" width="${w - 6}" height="${h - 6}" rx="2" fill="none" stroke="var(--joint)" stroke-width="0.6" opacity=".6"/>`;
+    o += `<path class="dim" d="M${x0} ${y0 - 10}h${w}M${x0} ${y0 - 14}v8M${x0 + w} ${y0 - 14}v8"/><text x="${x0 + w / 2}" y="${y0 - 16}" text-anchor="middle">400</text>`;
+    o += `<path class="dim" d="M${x0 - 10} ${y0}v${h}M${x0 - 14} ${y0}h8M${x0 - 14} ${y0 + h}h8"/><text x="${x0 - 16}" y="${y0 + h / 2 + 4}" text-anchor="end">200</text>`;
+    o += `<text x="${x0 + w - 6}" y="${y0 + 14}" text-anchor="end">R5</text>`;
+    // section with chamfer
+    const c = 5 * k * 1.6;
+    o += `<path d="M${sx} ${y0 + h}V${y0 + h - sh + c}L${sx + c} ${y0 + h - sh}H${sx + 120 - c}L${sx + 120} ${y0 + h - sh + c}V${y0 + h}Z" fill="var(--sv)" stroke="var(--joint)" stroke-width="1.2"/>`;
+    o += `<path class="dim" d="M${sx + 130} ${y0 + h - sh}v${sh}M${sx + 126} ${y0 + h - sh}h8M${sx + 126} ${y0 + h}h8"/><text x="${sx + 138}" y="${y0 + h - sh / 2 + 4}">60</text>`;
+    o += `<text x="${sx}" y="${y0 + h - sh - 10}">розріз · фаска ≈5</text>`;
+    o += `<text x="${x0}" y="${y0 + h + 22}">мм · план 1:6,5</text>`;
+    const W = sx + 170;
+    document.getElementById('stones').innerHTML = `<svg viewBox="0 0 ${W} ${y0 + h + 30}" role="img" aria-label="Плита 400×200×60 мм у плані та в розрізі">${o}</svg>`;
+  })();
+
+  document.getElementById('legend').innerHTML = ORDER.map(k => `<span><i class="sw" style="background:${VAR[k]}"></i>${NAME[k]}</span>`).join('');
+
+  function hash(x, y) { let h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return h - Math.floor(h); }
+  const V = 2400;
+  function schemeSVG(s) {
+    const [px, py] = s.period_mm;
+    let out = '';
+    const reach = 200;
+    for (let i = Math.floor(-reach / px); i <= Math.ceil((V + reach) / px); i++) {
+      for (let j = Math.floor(-reach / py); j <= Math.ceil((V + reach) / py); j++) {
+        for (const [cx0, cy0, w, h, a, k] of s.stones) {
+          const cx = cx0 + i * px, cy = cy0 + j * py;
+          if (cx < -reach || cx > V + reach || cy < -reach || cy > V + reach) continue;
+          let fill = VAR[k];
+          if (mode === 'real') { const t = hash(Math.round(cx), Math.round(cy)); const c = MIX[Math.floor(t * MIX.length)]; const l = 0.92 + hash(Math.round(cy), Math.round(cx)) * 0.16; fill = `rgb(${c.map(v => Math.round(v * l)).join(',')})`; }
+          const tr = a ? ` transform="rotate(${a} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : '';
+          out += `<rect x="${(cx - w / 2 + 3).toFixed(1)}" y="${(cy - h / 2 + 3).toFixed(1)}" width="${w - 6}" height="${h - 6}" rx="6" fill="${fill}"${tr}/>`;
+        }
+      }
+    }
+    return `<svg viewBox="0 0 ${V} ${V}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Схема ${s.name}">${out}</svg>`;
+  }
+
+  const grid = document.getElementById('grid');
+  function renderGrid() {
+    grid.innerHTML = D.schemes.map((s) => {
+      const hS = s.stats.share_H;
+      const share = `<span style="width:${hS * 100}%;background:var(--sh)"></span><span style="width:${(1 - hS) * 100}%;background:var(--sv)"></span>`;
+      const img = D.previews[s.id] ? `<div class="sphere"><img src="${D.previews[s.id]}" alt="Матеріал ${s.name} на сфері"></div>` : '';
+      const total = s.area_sample.cut + s.area_sample.whole;
+      return `<article class="card" id="s${s.id.slice(0, 2)}">
+        <div class="fig">${schemeSVG(s)}<span class="tag">${s.id.slice(0, 2)}</span>
+          <div class="scale"><span>0,4 м</span><i style="width:16.67%"></i></div>${img}</div>
+        <div class="body">
+          <div class="title-row"><h3>${s.name}</h3><span class="use">${s.use}</span></div>
+          <p class="note">${s.note}</p>
+          <div class="share" aria-hidden="true">${share}</div>
+          <dl class="kv"><dt>Поздовжніх / поперечних</dt><dd>${fmt(hS * 100)}% / ${fmt((1 - hS) * 100)}%</dd><dt>Модуль</dt><dd>${fmt(s.period_mm[0])} × ${fmt(s.period_mm[1])} мм</dd><dt>Підрізка на 2,4×2,4 м</dt><dd>${s.area_sample.cut} з ${total} шт · ${fmt(s.area_sample.cut / total * 100)}%</dd></dl>
+        </div></article>`;
+    }).join('');
+  }
+
+  document.getElementById('mats').innerHTML = D.schemes.map(s => `<div class="mat">${D.previews[s.id] ? `<img src="${D.previews[s.id]}" alt="Сфера з матеріалом ${s.name}" loading="lazy">` : ''}<b>${s.name}</b><small>Plyta_${s.id} · ${D.textures[s.id].texture_mm.map(v => fmt(v)).join(' × ')} мм</small></div>`).join('');
+
+  // calculator
+  const sel = document.getElementById('scheme');
+  sel.innerHTML = D.schemes.map(s => `<option value="${s.id}">${s.id.slice(0, 2)} · ${s.name}</option>`).join('');
+  const saved = store.get('plyta-scheme'); if (saved && D.schemes.some(s => s.id === saved)) sel.value = saved;
+  const area = document.getElementById('area'), reserve = document.getElementById('reserve');
+  const price = document.getElementById('price'), pallet = document.getElementById('pallet');
+  const num = el => Math.max(0, parseFloat(String(el.value).replace(',', '.')) || 0);
+  function calc() {
+    const s = D.schemes.find(x => x.id === sel.value);
+    const a = num(area), r = num(reserve), pr = num(price), pal = num(pallet);
+    const total = a * (1 + r / 100);
+    const pcs = Math.ceil(total * 12.5);
+    document.getElementById('result').innerHTML = `
+      <div><small>Замовити</small><b>${fmt(total, 1)} м²</b></div>
+      <div><small>Плит 400×200</small><b>${fmt(pcs)} шт</b></div>
+      <div><small>Вага, розрахунково</small><b>${fmt(total * D.product.kg_per_m2_est / 1000, 2)} т</b></div>
+      <div><small>${pr ? 'Вартість' : 'Вартість — введіть ціну'}</small><b>${pr ? fmt(Math.round(total * pr)) + ' грн' : '—'}</b></div>`;
+    const hS = s.stats.share_H;
+    document.getElementById('pcs').innerHTML = `
+      <div class="pcs-row"><i class="sw" style="background:var(--sh)"></i><span>Поздовжніх плит</span><span class="num">≈${fmt(Math.round(pcs * hS))} шт</span></div>
+      <div class="pcs-row"><i class="sw" style="background:var(--sv)"></i><span>Поперечних плит</span><span class="num">≈${fmt(pcs - Math.round(pcs * hS))} шт</span></div>
+      <div class="pcs-row"><i class="sw" style="background:transparent"></i><span>Піддонів</span><span class="num">${pal ? fmt(total / pal, 2) : 'введіть м² на піддоні'}</span></div>`;
+    const cut = s.area_sample.cut / (s.area_sample.cut + s.area_sample.whole);
+    document.getElementById('calc-hint').textContent = cut > 0.3
+      ? 'Для цієї схеми закладайте 10–12% запасу: біля країв підрізається багато плит.'
+      : 'Запас 5% покриває підрізку біля бордюрів і бій. Кількість округлена вгору.';
+  }
+  [area, reserve, sel, price, pallet].forEach(el => el.addEventListener('input', () => { store.set('plyta-scheme', sel.value); calc(); }));
+  document.querySelectorAll('[data-mode]').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    b.addEventListener('click', () => {
+      mode = b.dataset.mode; store.set('plyta-mode', mode);
+      document.querySelectorAll('[data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderGrid();
+    });
+  });
+  renderGrid(); calc();
+})();
+</script>

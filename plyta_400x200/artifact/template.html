@@ -1,0 +1,325 @@
+<title>Плита 400×200: схеми викладки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: каталожний аркуш — специфікація зліва, розрахунок справа, далі сітка схем і темна «галерея матеріалів». */
+:root {
+  --bg: #eceef0;
+  --paper: #f8f9fa;
+  --ink: #1b1f23;
+  --muted: #59616a;
+  --line: #c7ccd1;
+  --sand: #9a6a22;
+  --sand-soft: #efe2cc;
+  --joint: #23262a;
+  --sh: #bab4ae;
+  --sv: #5e5957;
+  --gallery: #161718;
+  --gallery-ink: #e8e9ea;
+  --gallery-muted: #9a9ea3;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181b; --paper: #1d2125; --ink: #e6e8ea; --muted: #9ba3ab; --line: #343a40;
+    --sand: #d9a75c; --sand-soft: #3a2f1f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181b; --paper: #1d2125; --ink: #e6e8ea; --muted: #9ba3ab; --line: #343a40;
+  --sand: #d9a75c; --sand-soft: #3a2f1f; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 56px; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 5vw, 46px); line-height: 1.05; }
+h2 { font-size: clamp(19px, 2.6vw, 24px); font-weight: 500; }
+h3 { font-size: 16px; font-weight: 500; }
+p { margin: 0; }
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.label { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+a { color: var(--sand); }
+:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
+
+/* header */
+header { display: grid; gap: 14px; border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
+.eyebrow { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.lede { max-width: 64ch; color: var(--muted); font-size: 16px; }
+
+/* spec */
+.spec { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 20px; display: grid; gap: 16px; min-width: 0; }
+.stones svg { width: 100%; height: auto; display: block; }
+.stones text { font-family: var(--font-mono); font-size: 11px; fill: var(--muted); }
+.stones .dim { stroke: var(--muted); stroke-width: 0.8; fill: none; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: baseline; }
+th { font-weight: 500; color: var(--muted); }
+td.num, th.num { text-align: right; }
+thead th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tbl { overflow-x: auto; }
+
+/* calculator */
+.calc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field label { font-size: 12px; color: var(--muted); font-weight: 500; }
+input, select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; width: 100%; min-width: 0; }
+input { font-family: var(--font-mono); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; padding: 7px 12px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.result { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.result div { background: var(--paper); padding: 10px 12px; display: grid; gap: 2px; }
+.result b { font-family: var(--font-mono); font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.result small { color: var(--muted); font-size: 12px; }
+.pcs { display: grid; gap: 6px; font-size: 14px; }
+.pcs-row { display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: center; }
+.sw { width: 14px; height: 14px; border-radius: 2px; border: 1px solid var(--joint); }
+.hint { font-size: 12.5px; color: var(--muted); }
+
+/* schemes */
+.bar { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; justify-content: space-between; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 22px; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.fig { position: relative; aspect-ratio: 1; background: var(--joint); max-width: 100%; }
+.fig svg { display: block; width: 100%; height: 100%; }
+.fig .tag { position: absolute; left: 10px; top: 10px; background: var(--paper); color: var(--ink); font-family: var(--font-mono); font-size: 12px; padding: 3px 7px; border-radius: 2px; }
+.fig .scale { position: absolute; left: 10px; bottom: 10px; display: grid; gap: 3px; color: #fff; font-family: var(--font-mono); font-size: 11px; text-shadow: 0 1px 2px #000; }
+.fig .scale i { display: block; height: 5px; border: 1.5px solid #fff; border-top: 0; width: 22.22%; min-width: 40px; }
+.sphere { position: absolute; right: 10px; bottom: 10px; width: 30%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--paper), 0 6px 18px rgba(0,0,0,.45); background: var(--gallery); }
+.sphere img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.22); display: block; }
+.body { padding: 16px 18px 18px; display: grid; gap: 12px; align-content: start; }
+.title-row { display: flex; gap: 10px; align-items: baseline; justify-content: space-between; flex-wrap: wrap; }
+.note { color: var(--muted); font-size: 14px; }
+.share { display: flex; height: 8px; border-radius: 2px; overflow: hidden; border: 1px solid var(--joint); }
+.share span { display: block; height: 100%; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.use { display: inline-block; font-size: 12px; background: var(--sand-soft); color: var(--ink); padding: 2px 8px; border-radius: 2px; }
+
+/* gallery */
+.gallery { background: var(--gallery); color: var(--gallery-ink); border-radius: 6px; padding: 28px 22px; display: grid; gap: 22px; }
+.gallery .label { color: var(--gallery-muted); }
+.gallery p { color: var(--gallery-muted); max-width: 70ch; }
+.mats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: 14px; }
+.mat { background: #222426; border-radius: 10px; padding: 10px 10px 12px; display: grid; gap: 8px; }
+.mat img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; display: block; }
+.mat b { font-weight: 500; font-size: 13px; color: var(--gallery-ink); }
+.mat small { color: var(--gallery-muted); font-size: 12px; }
+
+/* files */
+.files { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.file { border-top: 2px solid var(--ink); padding-top: 10px; display: grid; gap: 6px; align-content: start; }
+.file code { font-family: var(--font-mono); font-size: 12.5px; color: var(--sand); word-break: break-all; }
+.file p { font-size: 14px; color: var(--muted); }
+footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 820px) {
+  .spec { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 420px) {
+  .calc-grid, .result { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .2s ease; }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="label">Плита тротуарна · колормікс</span><span class="label">400 × 200 × 60 мм</span><span class="label">Дані: ТЗ на форму ВР-2664 і фото</span></div>
+    <h1>Плита 400×200×60: 10 схем викладки</h1>
+    <p class="lede">Усі схеми побудовані з однієї плити 400×200 і перевірені на точне покриття без щілин. Для кожної є креслення, кількість підрізки та PBR-матеріал колорміксу, знятий з фото вашої викладки.</p>
+  </header>
+
+  <section class="spec" aria-labelledby="spec-h">
+    <div class="panel">
+      <div class="label" id="spec-h">Характеристики</div>
+      <div class="stones" id="stones"></div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Параметр</th><th class="num">Значення</th></tr></thead>
+          <tbody>
+            <tr><th>Номінальний розмір</th><td class="num mono">400 × 200 × 60 мм</td></tr>
+            <tr><th>Внутрішній розмір форми</th><td class="num mono">398 × 198 мм</td></tr>
+            <tr><th>Радіус кутів у плані</th><td class="num mono">R5</td></tr>
+            <tr><th>Плит на 1 м²</th><td class="num mono">12,5 шт</td></tr>
+            <tr><th>Вага 1 м²</th><td class="num mono">≈138 кг*</td></tr>
+            <tr><th>Вага 1 плити</th><td class="num mono">≈11 кг*</td></tr>
+            <tr><th>Колір</th><td style="text-align:right">колормікс: графіт, коричнево-сірий, бежевий</td></tr>
+            <tr><th>Форма за цикл</th><td class="num mono">9 шт (3 × 3)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">* Розрахунково для бетону 2300 кг/м³: у кресленні вага не вказана. Ціну та кількість на піддоні введіть у калькуляторі.</p>
+    </div>
+
+    <div class="panel" aria-labelledby="calc-h">
+      <div class="label" id="calc-h">Розрахунок замовлення</div>
+      <div class="calc-grid">
+        <div class="field"><label for="area">Площа, м²</label><input id="area" type="number" min="1" step="0.5" value="40" inputmode="decimal"></div>
+        <div class="field"><label for="reserve">Запас на підрізку, %</label><input id="reserve" type="number" min="0" max="30" step="1" value="5" inputmode="numeric"></div>
+        <div class="field" style="grid-column: 1 / -1"><label for="scheme">Схема</label><select id="scheme"></select></div>
+        <div class="field"><label for="price">Ціна, грн/м²</label><input id="price" type="number" min="0" step="1" placeholder="напр. 520" inputmode="decimal"></div>
+        <div class="field"><label for="pallet">М² на піддоні</label><input id="pallet" type="number" min="0" step="0.01" placeholder="уточніть" inputmode="decimal"></div>
+      </div>
+      <div class="result" id="result"></div>
+      <div class="pcs" id="pcs"></div>
+      <p class="hint" id="calc-hint"></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="schemes-h" style="display:grid; gap:18px">
+    <div class="bar">
+      <h2 id="schemes-h">Схеми викладки</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+        <div class="legend" id="legend"></div>
+        <div class="seg" role="group" aria-label="Відображення"><button type="button" data-mode="real" aria-pressed="true">Колормікс</button><button type="button" data-mode="size" aria-pressed="false">Схема</button></div>
+      </div>
+    </div>
+    <p class="hint">Фрагмент 2,4 × 2,4 м у масштабі. У режимі «Схема» світлі плити лежать поздовжньо, темні — поперек; «Колормікс» — як виглядатиме в житті.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="gallery" aria-labelledby="gal-h">
+    <div style="display:grid; gap:8px">
+      <div class="label">Blender · Cycles</div>
+      <h2 id="gal-h">PBR-матеріали</h2>
+      <p>Безшовні текстури для кожної схеми: колір, нормалі, шорсткість, AO та карта висот (шов 3 мм, фаска 5 мм, кути R5). Кожна плита має свій тон і плями колорміксу. Сфери відрендерені з цих самих файлів.</p>
+    </div>
+    <div class="mats" id="mats"></div>
+  </section>
+
+  <section aria-labelledby="files-h" style="display:grid; gap:16px">
+    <h2 id="files-h">Файли для архітектора</h2>
+    <p class="hint">Усе лежить у репозиторії <a href="https://github.com/oleh-kuzmych/git-demo/tree/claude/paving-layout-schemes-8e34va/plyta_400x200" target="_blank" rel="noopener">oleh-kuzmych/git-demo → plyta_400x200/</a>. Розміри в міліметрах, 1:1.</p>
+    <div class="files">
+      <div class="file"><h3>Blender</h3><code>blender/plyta_schemes.blend</code><p>10 матеріалів Plyta_*, позначених як Assets, сфери-прев'ю та майданчик 4×4 м. Відкривається одразу в Material Preview, потрібен Blender 5.0+.</p></div>
+      <div class="file"><h3>PBR-текстури</h3><code>textures/&lt;схема&gt;/*.jpg, *.png</code><p>Квадратні тайли 2048 px: BaseColor, Normal (OpenGL), Roughness, AO, Displacement (16 біт і 8 біт для Lumion). Розмір тайла в мм — у textures.json. Підходять для Archicad, Lumion 11+, Twinmotion, Enscape, 3ds Max.</p></div>
+      <div class="file"><h3>Креслення DXF</h3><code>dxf/&lt;схема&gt;.dxf</code><p>Ділянка 2,4 × 2,4 м з підрізкою країв і блок модуля для масиву. Шари: PLYTA_H (поздовжні), PLYTA_V (поперечні), PLYTA_CUT (підрізані).</p></div>
+      <div class="file"><h3>SVG і дані</h3><code>svg/*.svg · schemes.json</code><p>Векторні схеми для презентацій і координати кожного каменю в модулі. Генератор у tools/ перебудовує все одним запуском.</p></div>
+    </div>
+  </section>
+
+  <footer>Розміри взято з технічного завдання на форму ВР-2664, колір — з фото викладки. Вагу розраховано, ціну й кількість на піддоні уточніть у виробника.</footer>
+</div>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const ORDER = ['H', 'V'];
+  const VAR = { H: 'var(--sh)', V: 'var(--sv)' };
+  const NAME = { H: 'поздовжня', V: 'поперечна' };
+  const MIX = [[94, 94, 97], [114, 112, 112], [113, 104, 100], [128, 122, 118]];
+  const fmt = (v, d = 0) => v.toLocaleString('uk-UA', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  let mode = store.get('plyta-mode') || 'real';
+
+  // To-scale drawing of the plate: plan + section
+  (function drawPlate() {
+    const k = 0.62, x0 = 34, y0 = 30, w = 400 * k, h = 200 * k, sx = x0 + w + 46, sh = 60 * k;
+    let o = `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" rx="${5 * k}" fill="var(--sh)" stroke="var(--joint)" stroke-width="1.5"/>`;
+    o += `<rect x="${x0 + 3}" y="${y0 + 3}" width="${w - 6}" height="${h - 6}" rx="2" fill="none" stroke="var(--joint)" stroke-width="0.6" opacity=".6"/>`;
+    o += `<path class="dim" d="M${x0} ${y0 - 10}h${w}M${x0} ${y0 - 14}v8M${x0 + w} ${y0 - 14}v8"/><text x="${x0 + w / 2}" y="${y0 - 16}" text-anchor="middle">400</text>`;
+    o += `<path class="dim" d="M${x0 - 10} ${y0}v${h}M${x0 - 14} ${y0}h8M${x0 - 14} ${y0 + h}h8"/><text x="${x0 - 16}" y="${y0 + h / 2 + 4}" text-anchor="end">200</text>`;
+    o += `<text x="${x0 + w - 6}" y="${y0 + 14}" text-anchor="end">R5</text>`;
+    // section with chamfer
+    const c = 5 * k * 1.6;
+    o += `<path d="M${sx} ${y0 + h}V${y0 + h - sh + c}L${sx + c} ${y0 + h - sh}H${sx + 120 - c}L${sx + 120} ${y0 + h - sh + c}V${y0 + h}Z" fill="var(--sv)" stroke="var(--joint)" stroke-width="1.2"/>`;
+    o += `<path class="dim" d="M${sx + 130} ${y0 + h - sh}v${sh}M${sx + 126} ${y0 + h - sh}h8M${sx + 126} ${y0 + h}h8"/><text x="${sx + 138}" y="${y0 + h - sh / 2 + 4}">60</text>`;
+    o += `<text x="${sx}" y="${y0 + h - sh - 10}">розріз · фаска ≈5</text>`;
+    o += `<text x="${x0}" y="${y0 + h + 22}">мм · план 1:6,5</text>`;
+    const W = sx + 170;
+    document.getElementById('stones').innerHTML = `<svg viewBox="0 0 ${W} ${y0 + h + 30}" role="img" aria-label="Плита 400×200×60 мм у плані та в розрізі">${o}</svg>`;
+  })();
+
+  document.getElementById('legend').innerHTML = ORDER.map(k => `<span><i class="sw" style="background:${VAR[k]}"></i>${NAME[k]}</span>`).join('');
+
+  function hash(x, y) { let h = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453; return h - Math.floor(h); }
+  const V = 2400;
+  function schemeSVG(s) {
+    const [px, py] = s.period_mm;
+    let out = '';
+    const reach = 200;
+    for (let i = Math.floor(-reach / px); i <= Math.ceil((V + reach) / px); i++) {
+      for (let j = Math.floor(-reach / py); j <= Math.ceil((V + reach) / py); j++) {
+        for (const [cx0, cy0, w, h, a, k] of s.stones) {
+          const cx = cx0 + i * px, cy = cy0 + j * py;
+          if (cx < -reach || cx > V + reach || cy < -reach || cy > V + reach) continue;
+          let fill = VAR[k];
+          if (mode === 'real') { const t = hash(Math.round(cx), Math.round(cy)); const c = MIX[Math.floor(t * MIX.length)]; const l = 0.92 + hash(Math.round(cy), Math.round(cx)) * 0.16; fill = `rgb(${c.map(v => Math.round(v * l)).join(',')})`; }
+          const tr = a ? ` transform="rotate(${a} ${cx.toFixed(1)} ${cy.toFixed(1)})"` : '';
+          out += `<rect x="${(cx - w / 2 + 3).toFixed(1)}" y="${(cy - h / 2 + 3).toFixed(1)}" width="${w - 6}" height="${h - 6}" rx="6" fill="${fill}"${tr}/>`;
+        }
+      }
+    }
+    return `<svg viewBox="0 0 ${V} ${V}" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Схема ${s.name}">${out}</svg>`;
+  }
+
+  const grid = document.getElementById('grid');
+  function renderGrid() {
+    grid.innerHTML = D.schemes.map((s) => {
+      const hS = s.stats.share_H;
+      const share = `<span style="width:${hS * 100}%;background:var(--sh)"></span><span style="width:${(1 - hS) * 100}%;background:var(--sv)"></span>`;
+      const img = D.previews[s.id] ? `<div class="sphere"><img src="${D.previews[s.id]}" alt="Матеріал ${s.name} на сфері"></div>` : '';
+      const total = s.area_sample.cut + s.area_sample.whole;
+      return `<article class="card" id="s${s.id.slice(0, 2)}">
+        <div class="fig">${schemeSVG(s)}<span class="tag">${s.id.slice(0, 2)}</span>
+          <div class="scale"><span>0,4 м</span><i style="width:16.67%"></i></div>${img}</div>
+        <div class="body">
+          <div class="title-row"><h3>${s.name}</h3><span class="use">${s.use}</span></div>
+          <p class="note">${s.note}</p>
+          <div class="share" aria-hidden="true">${share}</div>
+          <dl class="kv"><dt>Поздовжніх / поперечних</dt><dd>${fmt(hS * 100)}% / ${fmt((1 - hS) * 100)}%</dd><dt>Модуль</dt><dd>${fmt(s.period_mm[0])} × ${fmt(s.period_mm[1])} мм</dd><dt>Підрізка на 2,4×2,4 м</dt><dd>${s.area_sample.cut} з ${total} шт · ${fmt(s.area_sample.cut / total * 100)}%</dd></dl>
+        </div></article>`;
+    }).join('');
+  }
+
+  document.getElementById('mats').innerHTML = D.schemes.map(s => `<div class="mat">${D.previews[s.id] ? `<img src="${D.previews[s.id]}" alt="Сфера з матеріалом ${s.name}" loading="lazy">` : ''}<b>${s.name}</b><small>Plyta_${s.id} · ${D.textures[s.id].texture_mm.map(v => fmt(v)).join(' × ')} мм</small></div>`).join('');
+
+  // calculator
+  const sel = document.getElementById('scheme');
+  sel.innerHTML = D.schemes.map(s => `<option value="${s.id}">${s.id.slice(0, 2)} · ${s.name}</option>`).join('');
+  const saved = store.get('plyta-scheme'); if (saved && D.schemes.some(s => s.id === saved)) sel.value = saved;
+  const area = document.getElementById('area'), reserve = document.getElementById('reserve');
+  const price = document.getElementById('price'), pallet = document.getElementById('pallet');
+  const num = el => Math.max(0, parseFloat(String(el.value).replace(',', '.')) || 0);
+  function calc() {
+    const s = D.schemes.find(x => x.id === sel.value);
+    const a = num(area), r = num(reserve), pr = num(price), pal = num(pallet);
+    const total = a * (1 + r / 100);
+    const pcs = Math.ceil(total * 12.5);
+    document.getElementById('result').innerHTML = `
+      <div><small>Замовити</small><b>${fmt(total, 1)} м²</b></div>
+      <div><small>Плит 400×200</small><b>${fmt(pcs)} шт</b></div>
+      <div><small>Вага, розрахунково</small><b>${fmt(total * D.product.kg_per_m2_est / 1000, 2)} т</b></div>
+      <div><small>${pr ? 'Вартість' : 'Вартість — введіть ціну'}</small><b>${pr ? fmt(Math.round(total * pr)) + ' грн' : '—'}</b></div>`;
+    const hS = s.stats.share_H;
+    document.getElementById('pcs').innerHTML = `
+      ${hS < 1 ? `<div class="pcs-row"><i class="sw" style="background:var(--sh)"></i><span>Поздовжніх плит</span><span class="num">≈${fmt(Math.round(pcs * hS))} шт</span></div>
+      <div class="pcs-row"><i class="sw" style="background:var(--sv)"></i><span>Поперечних плит</span><span class="num">≈${fmt(pcs - Math.round(pcs * hS))} шт</span></div>` : ''}
+      <div class="pcs-row"><i class="sw" style="background:transparent"></i><span>Піддонів</span><span class="num">${pal ? fmt(total / pal, 2) : 'введіть м² на піддоні'}</span></div>`;
+    const cut = s.area_sample.cut / (s.area_sample.cut + s.area_sample.whole);
+    document.getElementById('calc-hint').textContent = cut > 0.3
+      ? 'Для цієї схеми закладайте 10–12% запасу: біля країв підрізається багато плит.'
+      : 'Запас 5% покриває підрізку біля бордюрів і бій. Кількість округлена вгору.';
+  }
+  [area, reserve, sel, price, pallet].forEach(el => el.addEventListener('input', () => { store.set('plyta-scheme', sel.value); calc(); }));
+  document.querySelectorAll('[data-mode]').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.mode === mode));
+    b.addEventListener('click', () => {
+      mode = b.dataset.mode; store.set('plyta-mode', mode);
+      document.querySelectorAll('[data-mode]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); renderGrid();
+    });
+  });
+  renderGrid(); calc();
+})();
+</script>
