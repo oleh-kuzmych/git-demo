@@ -1,0 +1,138 @@
+{
+ "swatches": [
+  {
+   "file": "colormix_2_00.png",
+   "w": 32,
+   "h": 32
+  },
+  {
+   "file": "colormix_2_01.png",
+   "w": 31,
+   "h": 48
+  },
+  {
+   "file": "colormix_2_02.png",
+   "w": 68,
+   "h": 70
+  },
+  {
+   "file": "colormix_2_03.png",
+   "w": 30,
+   "h": 31
+  },
+  {
+   "file": "colormix_2_04.png",
+   "w": 69,
+   "h": 67
+  },
+  {
+   "file": "colormix_2_05.png",
+   "w": 31,
+   "h": 78
+  },
+  {
+   "file": "colormix_2_06.png",
+   "w": 68,
+   "h": 68
+  },
+  {
+   "file": "colormix_2_07.png",
+   "w": 31,
+   "h": 77
+  },
+  {
+   "file": "colormix_2_08.png",
+   "w": 32,
+   "h": 31
+  },
+  {
+   "file": "colormix_2_09.png",
+   "w": 69,
+   "h": 69
+  },
+  {
+   "file": "colormix_2_10.png",
+   "w": 68,
+   "h": 69
+  },
+  {
+   "file": "colormix_2_11.png",
+   "w": 30,
+   "h": 31
+  },
+  {
+   "file": "colormix_2_12.png",
+   "w": 31,
+   "h": 31
+  },
+  {
+   "file": "colormix_2_13.png",
+   "w": 70,
+   "h": 70
+  },
+  {
+   "file": "colormix_2_14.png",
+   "w": 30,
+   "h": 32
+  },
+  {
+   "file": "colormix_2_15.png",
+   "w": 193,
+   "h": 71
+  },
+  {
+   "file": "colormix_3_00.png",
+   "w": 93,
+   "h": 164
+  },
+  {
+   "file": "colormix_3_01.png",
+   "w": 100,
+   "h": 70
+  },
+  {
+   "file": "colormix_3_02.png",
+   "w": 152,
+   "h": 208
+  },
+  {
+   "file": "colormix_3_03.png",
+   "w": 100,
+   "h": 62
+  },
+  {
+   "file": "colormix_3_04.png",
+   "w": 99,
+   "h": 71
+  },
+  {
+   "file": "colormix_3_05.png",
+   "w": 225,
+   "h": 71
+  }
+ ],
+ "mean_bgr": [
+  164.1,
+  170.5,
+  186.7
+ ],
+ "zones": {
+  "peach_rgb": [
+   196.2,
+   172.3,
+   161.3
+  ],
+  "grey_rgb": [
+   143.3,
+   139.0,
+   139.1
+  ],
+  "mid_rgb": [
+   182.1,
+   167.5,
+   161.9
+  ],
+  "peach_share": 0.206,
+  "grey_share": 0.124
+ }
+}

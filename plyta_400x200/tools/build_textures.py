@@ -17,6 +17,33 @@ from scipy.ndimage import gaussian_filter
 
 from schemes import SCHEMES, build
 
+import cv2
+
+SWATCH_DIR = None  # заповнюється в load_swatches()
+SWATCHES = []
+
+
+def load_swatches():
+    """Реальні камені з фото колорміксу (reference/swatches, див. extract_swatches.py).
+
+    Кольори розкладаються на головні компоненти (PCA) усіх каменів з фото:
+    t1 — головна вісь «персиковий ↔ сірий/графіт», t2, t3 — відтінок.
+    Повертає (mu, E, список карт [t1,t2,t3] у 4× збільшенні, список квантилів t1)."""
+    d = os.path.join(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")), "reference", "swatches")
+    meta = json.load(open(os.path.join(d, "swatches.json")))
+    ims = [cv2.cvtColor(cv2.imread(os.path.join(d, e["file"])), cv2.COLOR_BGR2RGB).astype(np.float32) for e in meta["swatches"]]
+    allpx = np.concatenate([im.reshape(-1, 3) for im in ims])
+    mu = allpx.mean(0)
+    _, _, vt = np.linalg.svd(allpx - mu, full_matrices=False)
+    E = vt                                   # рядки — головні компоненти
+    maps, quant = [], []
+    for im in ims:
+        t = (im - mu) @ E.T                  # H x W x 3
+        quant.append(np.quantile(t[..., 0], np.linspace(0, 1, 257)).astype(np.float32))
+        t = cv2.resize(t, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+        maps.append(cv2.GaussianBlur(t, (0, 0), 2.0))
+    return mu.astype(np.float32), E.astype(np.float32), maps, quant, meta["zones"]
+
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 JOINT = 3.0      # ширина шва, мм
 CORNER = 5.0     # радіус заокруглення кута в плані, мм
@@ -75,7 +102,12 @@ def render(scheme, res):
     tone = np.zeros((H, W), np.float32)     # тон каменю
     cov = np.zeros((H, W), np.float32)      # покриття каменем (антиаліасинг)
     sid = np.zeros((H, W), np.int32)        # номер плити (0 — шов)
+    tmap = np.zeros((H, W, 3), np.float32)  # макро-розкладка плям з фото (PCA-координати)
+    axis = np.zeros((H, W), np.int8)        # напрям довгої сторони: 0/45/90/135°
     attrs = [None]
+    if not SWATCHES:
+        SWATCHES.extend(load_swatches())
+    MU, E, SWM, SWQ, ZONES = SWATCHES
 
     reach = 200
     for i in range(-1, n + 2):
@@ -109,19 +141,39 @@ def render(scheme, res):
                 c = np.clip(-d * sx + 0.5, 0, 1)
                 gx, gy = r.normal(0, 0.0015, 2)
                 tp = TOP + r.normal(0, 0.15) + gx * u + gy * v
-                attrs.append(dict(
-                    base=r.choice(3, p=[0.45, 0.30, 0.25]),        # графіт / сірий / коричнево-сірий
-                    tone=r.normal(0, 1),
-                    patch=r.choice([0.0, r.uniform(0.15, 0.5), r.uniform(0.5, 1.0)], p=[0.3, 0.4, 0.3]),
-                    pcol=r.choice(3, p=[0.5, 0.3, 0.2]),           # бежевий / світло-сірий / рудий
-                    theta=r.uniform(0, 2 * math.pi), thr=r.uniform(-0.2, 0.6),
-                    chip=r.uniform(0, 1) ** 2))
+                k_sw = int(r.integers(len(SWM)))
+                attrs.append(dict(chip=r.uniform(0, 1) ** 2, sw=k_sw, sl=(slice(y0, y1), slice(x0, x1))))
+                # --- взірець з фото: довга сторона плити = довга сторона взірця
+                long_u = w >= h
+                A = (u / w + 0.5) if long_u else (v / h + 0.5)
+                B = (v / h + 0.5) if long_u else (u / w + 0.5)
+                sw = SWM[k_sw]
+                Hs, Ws = sw.shape[:2]
+                target = max(w, h) / min(w, h)
+                rs = Ws / Hs
+                if rs < target / 1.4:        # квадратний взірець: беремо смугу і трохи розтягуємо вздовж
+                    cw, ch = Ws, Ws / (target / 1.4)
+                elif rs > target * 1.25:
+                    cw, ch = Hs * target * 1.25, Hs
+                else:
+                    cw, ch = Ws, Hs
+                ox, oy = r.uniform(0, Ws - cw), r.uniform(0, Hs - ch)
+                if r.random() < 0.5:
+                    A = 1 - A
+                if r.random() < 0.5:
+                    B = 1 - B
+                mx = (ox + np.clip(A, 0, 1) * (cw - 1)).astype(np.float32)
+                my = (oy + np.clip(B, 0, 1) * (ch - 1)).astype(np.float32)
+                col = cv2.remap(sw, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+                ax_idx = int(round(((ang if long_u else ang + 90) % 180) / 45)) % 4
                 idx = len(attrs) - 1
                 sl = (slice(y0, y1), slice(x0, x1))
                 upd = c > cov[sl]
                 prof[sl] = np.where(upd, p, prof[sl])
                 top[sl] = np.where(upd, tp, top[sl])
                 sid[sl] = np.where(upd, idx, sid[sl])
+                tmap[sl] = np.where(upd[..., None], col, tmap[sl])
+                axis[sl] = np.where(upd, ax_idx, axis[sl])
                 cov[sl] = np.maximum(cov[sl], c)
 
     mm = lambda v: v * ppm
@@ -138,32 +190,76 @@ def render(scheme, res):
     height = np.where(cov > 0, np.maximum(stone_h, sand_h * (1 - cov) + stone_h * cov), sand_h)
     height = np.maximum(height, sand_h)
 
-    # --- колір (sRGB): колормікс, як на фото
-    A1 = pnoise((H, W), mm(55), rng)
-    A2 = pnoise((H, W), mm(55), rng)
-    B1 = pnoise((H, W), mm(14), rng)
-    speck = pnoise((H, W), mm(0.8), rng)
+    # --- колір (sRGB): розкладка плям і палітра з фото + волокна в повній роздільності
     def lut(f):
         return np.array([f(a) if a else 0 for a in attrs], np.float32)[sid]
-    BASES = np.array([[94, 94, 97], [114, 112, 112], [113, 104, 100]], np.float32)
-    PATCH = np.array([[158, 148, 141], [152, 150, 149], [134, 116, 106]], np.float32)
-    base_idx = np.array([a["base"] if a else 0 for a in attrs])[sid]
-    pcol_idx = np.array([a["pcol"] if a else 0 for a in attrs])[sid]
-    th = lut(lambda a: a["theta"])
-    field = (np.cos(th) * A1 + np.sin(th) * A2) * 0.8 + 0.35 * B1
-    pm = np.clip((field - lut(lambda a: a["thr"])) / 1.4, 0, 1) * 0.9 * lut(lambda a: a["patch"])
-    lum = 1 + 0.05 * lut(lambda a: a["tone"]) + 0.03 * mid + 0.04 * B1
-    stone_rgb = BASES[base_idx] * lum[..., None]
-    stone_rgb = stone_rgb * (1 - pm[..., None]) + PATCH[pcol_idx] * pm[..., None]
-    stone_rgb += (6 * fine)[..., None]
-    stone_rgb += (np.where(speck > 2.0, 38, 0) + np.where(speck < -2.4, -18, 0))[..., None]
+    inside = (cov > 0.5).astype(np.float32)
+    wsum = gaussian_filter(inside, mm(12), mode="wrap") + 1e-4
+    t1 = tmap[..., 0]
+    m1 = gaussian_filter(t1 * inside, mm(12), mode="wrap") / wsum
+    sd = np.sqrt(np.maximum(gaussian_filter(t1 ** 2 * inside, mm(12), mode="wrap") / wsum - m1 ** 2, 0))
+
+    def aniso(angle, along, across):
+        """Видовжений шум: волокна смуг уздовж довгої сторони плити."""
+        fy = np.fft.fftfreq(H)[:, None]; fx = np.fft.rfftfreq(W)[None, :]
+        t = math.radians(angle)
+        fu = fx * math.cos(t) + fy * math.sin(t)     # частота вздовж напрямку (cos t, sin t), Y — вниз
+        fv = -fx * math.sin(t) + fy * math.cos(t)
+        filt = np.exp(-(fu * along) ** 2 - (fv * across) ** 2)
+        o = np.fft.irfft2(np.fft.rfft2(rng.standard_normal((H, W))) * filt, s=(H, W))
+        return ((o - o.mean()) / (o.std() + 1e-9)).astype(np.float32)
+    # широкі смуги вздовж довгої сторони плити (злегка хвилясті)
+    fib = np.stack([aniso(a_, mm(45), mm(6.0)) for a_ in (0, 45, 90, 135)])
+    S_ = np.take_along_axis(fib, axis[None].astype(np.int64), 0)[0]
+    gx_, gy_ = np.meshgrid(np.arange(W, dtype=np.float32), np.arange(H, dtype=np.float32))
+    dx_ = pnoise((H, W), mm(70), rng) * mm(2.5)
+    dy_ = pnoise((H, W), mm(70), rng) * mm(2.5)
+    S_ = cv2.remap(S_, gx_ + dx_, gy_ + dy_, cv2.INTER_LINEAR, borderMode=cv2.BORDER_WRAP)
+    # дрібне зерно: перехід «персиковий ↔ сірий» складається з окремих крапинок, як на фото
+    G_ = 0.7 * pnoise((H, W), mm(1.1), rng) + 0.3 * pnoise((H, W), mm(2.6), rng)
+    z = (t1 - m1) / (sd + 6) + 0.55 * S_ * (0.45 + np.clip(sd / 25, 0, 1.2)) + 0.95 * G_
+    t1d = m1 + (sd + 6) * np.tanh(2.6 * z) / np.tanh(2.6)
+    # підгонка під камінь з фото: середнє і розкид (пропорції сірого й персикового),
+    # без проміжних «лілових» тонів — на фото перехід складається з окремих зерен
+    for k, at in enumerate(attrs):
+        if not at:
+            continue
+        sl = at["sl"]
+        msk = (sid[sl] == k) & (cov[sl] > 0.5)
+        vals = t1d[sl][msk]
+        if vals.size < 50:
+            continue
+        q = SWQ[at["sw"]]
+        mu_s = float(np.mean(q)); sd_s = float(np.std(q)) * 1.5 + 4
+        sub = t1d[sl]
+        sub[msk] = np.clip(mu_s + (vals - vals.mean()) * sd_s / (vals.std() + 1e-6), q[3], q[-4])
+        t1d[sl] = sub
+    tt = np.stack([t1d, 0.9 * tmap[..., 1], 0.6 * tmap[..., 2]], -1)   # трохи приглушуємо кольоровий шум фото (зелені відблиски)
+    stone_rgb = MU[None, None, :] + tt @ E
+    lum = stone_rgb.mean(-1)
+    # калібрування за фото: середні кольори персикової, нейтральної та сірої зон
+    # (лінійна підгонка по кожному каналу, найменші квадрати з вагою = частці зони)
+    sp = stone_rgb[cov > 0.9]
+    warm = sp[:, 0] - sp[:, 2]
+    zs = [warm > 28, (warm >= 10) & (warm <= 28), warm < 10]
+    src = np.stack([sp[z].mean(0) for z in zs])
+    dst = np.array([ZONES["peach_rgb"], ZONES["mid_rgb"], ZONES["grey_rgb"]], np.float32)
+    wts = np.sqrt(np.array([z.mean() for z in zs]) + 0.05)
+    for ch in range(3):
+        A_ = np.c_[src[:, ch], np.ones(3)] * wts[:, None]
+        a_, b_ = np.linalg.lstsq(A_, dst[:, ch] * wts, rcond=None)[0]
+        stone_rgb[..., ch] = stone_rgb[..., ch] * a_ + b_
+    speck = pnoise((H, W), mm(0.8), rng)
+    stone_rgb += (8 * fine)[..., None]
+    stone_rgb += (np.where(speck > 1.8, 32, 0) + np.where(speck < -2.0, -26, 0))[..., None]
     edge = (1 - prof) * (cov > 0)
-    stone_rgb += (edge * 70 * lut(lambda a: a["chip"]) * np.clip(fine2 + 0.6, 0, 1))[..., None]  # світлі сколи/пісок на ребрах
-    stone_rgb -= (25 * pores)[..., None]
-    sand_rgb = np.array([66, 64, 63], np.float32)[None, None, :] * (1 + 0.10 * fine2)[..., None]
-    sand_rgb += (np.where(fine2 > 1.7, 70, 0))[..., None]
+    stone_rgb += (edge * 8 * lut(lambda a: a["chip"]))[..., None]
+    stone_rgb -= (20 * pores)[..., None]
+    sand_rgb = np.array([92, 86, 82], np.float32)[None, None, :] * (1 + 0.10 * fine2)[..., None]
+    sand_rgb += (np.where(fine2 > 1.7, 60, 0))[..., None]
     a = cov[..., None]
     rgb = stone_rgb * a + sand_rgb * (1 - a)
+    pm = np.zeros_like(lum)
 
     # --- AO
     hb1 = gaussian_filter(height, sigma=mm(2.5), mode="wrap")

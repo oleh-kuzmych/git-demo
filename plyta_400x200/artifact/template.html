@@ -13,8 +13,8 @@
   --sand: #9a6a22;
   --sand-soft: #efe2cc;
   --joint: #23262a;
-  --sh: #bab4ae;
-  --sv: #5e5957;
+  --sh: #c4b2a8;
+  --sv: #6f6b6c;
   --gallery: #161718;
   --gallery-ink: #e8e9ea;
   --gallery-muted: #9a9ea3;
@@ -134,9 +134,9 @@ footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--lin
 
 <div class="wrap">
   <header>
-    <div class="eyebrow"><span class="label">Плита тротуарна · колормікс</span><span class="label">400 × 200 × 60 мм</span><span class="label">Дані: ТЗ на форму ВР-2664 і фото</span></div>
+    <div class="eyebrow"><span class="label">Плита тротуарна · колормікс</span><span class="label">400 × 200 × 60 мм</span><span class="label">Колір: виміряно з фото колорміксу</span></div>
     <h1>Плита 400×200×60: 10 схем викладки</h1>
-    <p class="lede">Усі схеми побудовані з однієї плити 400×200 і перевірені на точне покриття без щілин. Для кожної є креслення, кількість підрізки та PBR-матеріал колорміксу, знятий з фото вашої викладки.</p>
+    <p class="lede">Усі схеми побудовані з однієї плити 400×200 і перевірені на точне покриття без щілин. Для кожної є креслення, кількість підрізки та PBR-матеріал колорміксу. Плями на кожній плиті взяті з реальних каменів на фото, а кольори відкалібровані за ними.</p>
   </header>
 
   <section class="spec" aria-labelledby="spec-h">
@@ -153,7 +153,7 @@ footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--lin
             <tr><th>Плит на 1 м²</th><td class="num mono">12,5 шт</td></tr>
             <tr><th>Вага 1 м²</th><td class="num mono">≈138 кг*</td></tr>
             <tr><th>Вага 1 плити</th><td class="num mono">≈11 кг*</td></tr>
-            <tr><th>Колір</th><td style="text-align:right">колормікс: графіт, коричнево-сірий, бежевий</td></tr>
+            <tr><th>Колір</th><td style="text-align:right">колормікс: персиково-бежевий із сірими смугами</td></tr>
             <tr><th>Форма за цикл</th><td class="num mono">9 шт (3 × 3)</td></tr>
           </tbody>
         </table>
@@ -192,7 +192,7 @@ footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--lin
     <div style="display:grid; gap:8px">
       <div class="label">Blender · Cycles</div>
       <h2 id="gal-h">PBR-матеріали</h2>
-      <p>Безшовні текстури для кожної схеми: колір, нормалі, шорсткість, AO та карта висот (шов 3 мм, фаска 5 мм, кути R5). Кожна плита має свій тон і плями колорміксу. Сфери відрендерені з цих самих файлів.</p>
+      <p>Кожна плита в текстурі — окремий реальний камінь з ваших фото: перспективу вирівняно, плями збережено, смуги покладено вздовж довгої сторони. Дрібне зерно домальовано в повній роздільності, кольори відкалібровано за фото. Сфери відрендерені з цих самих файлів.</p>
     </div>
     <div class="mats" id="mats"></div>
   </section>
@@ -208,7 +208,7 @@ footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--lin
     </div>
   </section>
 
-  <footer>Розміри взято з технічного завдання на форму ВР-2664, колір — з фото викладки. Вагу розраховано, ціну й кількість на піддоні уточніть у виробника.</footer>
+  <footer>Розміри взято з технічного завдання на форму ВР-2664. Колір виміряно з фото колорміксу: персикові зони RGB 196·172·161 (21% площі), сірі 143·139·139 (12%). Вагу розраховано, ціну й кількість на піддоні уточніть у виробника.</footer>
 </div>
 
 <script type="application/json" id="data">__DATA__</script>
@@ -218,7 +218,7 @@ footer { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--lin
   const ORDER = ['H', 'V'];
   const VAR = { H: 'var(--sh)', V: 'var(--sv)' };
   const NAME = { H: 'поздовжня', V: 'поперечна' };
-  const MIX = [[94, 94, 97], [114, 112, 112], [113, 104, 100], [128, 122, 118]];
+  const MIX = [[196, 172, 161], [182, 168, 162], [182, 168, 162], [143, 139, 139], [118, 115, 117]];  // зони кольору, виміряні на фото колорміксу
   const fmt = (v, d = 0) => v.toLocaleString('uk-UA', { minimumFractionDigits: d, maximumFractionDigits: d });
   const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
   let mode = store.get('plyta-mode') || 'real';
