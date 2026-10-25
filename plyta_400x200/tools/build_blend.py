@@ -185,7 +185,7 @@ scene.render.image_settings.file_format = "JPEG"
 scene.render.image_settings.quality = 90
 scene.view_settings.view_transform = "AgX"
 scene.view_settings.look = "AgX - Medium High Contrast"
-scene.view_settings.exposure = -0.35
+scene.view_settings.exposure = float(argv[argv.index("--exposure") + 1]) if "--exposure" in argv else -0.35
 
 
 def frame_sphere(ob):
