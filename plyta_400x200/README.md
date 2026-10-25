@@ -125,17 +125,20 @@ blender -b -P plyta_400x200/tools/build_mall_scene.py -- --samples 128 --res 192
 
 Щоб показати іншу схему: `python3 plyta_400x200/tools/build_textures.py --only 04_herringbone90 --res 4000 --extent 4800 --suffix _XL`, потім `--scheme 04_herringbone90`.
 
-## Генератор колорміксу «мазком»
+## Генератор колорміксу
 
-`tools/colormix_strokes.py` моделює виготовлення колорміксу: 3–4 пігментовані суміші, змішані не до кінця → живильник протягує суміш одним мазком (смуги вздовж ходу, змазані кінці, хвиляста траєкторія) → кожна піщинка набуває кольору одного з пігментів. Пропорції й малюнок у кожної плити свої, тож дві однакові плити не трапляються.
+`tools/colormix_strokes.py` відтворює реальний колормікс (взірці — `reference/real_*.jpg`):
+смуги в усіх каменів в одному напрямку (хід живильника, `--dir v|h`), камінь переважно
+1–2 тонів із широким м'яким переходом, поверх — тонкі переривчасті штрихи, гладка
+поверхня з дрібним зерном і рідкими порами. Кожен камінь генерується окремо — однакових немає.
 
 ```bash
-python3 plyta_400x200/tools/colormix_strokes.py --palette all                 # картинки без повторів (colormix/*_unique.jpg)
-python3 plyta_400x200/tools/colormix_strokes.py --palette peach --seamless    # безшовний тайл для текстур
-python3 plyta_400x200/tools/colormix_strokes.py --palette peach --seed 7      # інша партія плит
+python3 plyta_400x200/tools/colormix_strokes.py --palette all                     # картинки без повторів
+python3 plyta_400x200/tools/colormix_strokes.py --palette brown_grey --seamless   # безшовний тайл для текстур
+python3 plyta_400x200/tools/colormix_strokes.py --palette sand --seed 7           # інша партія
 ```
 
-Палітри (`PALETTES`): `peach` (з ваших фото), `autumn`, `terracotta`, `grey` (для звірки з взірцем `reference/colormix_exemplar_grey.webp`).
+Палітри (`PALETTES`, кольори виміряні на реальних фото): `brown_grey`, `peach_grey`, `sand`, `rose`, `grey`.
 
 ## Як перенесено колормікс з фото
 
