@@ -39,6 +39,8 @@
 plyta_400x200/
   artifact/plyta_schemes.html  інтерактивна сторінка: характеристики, схеми, калькулятор
   blender/plyta_schemes.blend  10 матеріалів Plyta_* (Assets) + сфери-прев'ю + майданчик 4×4 м
+  blender/plyta_mall_scene.blend  візуалізація: площа перед ТРЦ, схема «Ложкова ½»
+  previews/mall_render.jpg     рендер цієї сцени (1920×1080)
   textures/<схема>/            PBR-карти, безшовні, квадратні 2048×2048 px
       *_BaseColor.jpg  (sRGB; кожна плита — реальний камінь з фото колорміксу)
       *_Normal.jpg     (OpenGL, Y+)
@@ -46,6 +48,7 @@ plyta_400x200/
       *_AO.jpg
       *_Displacement.png  (16 біт; 0 = дно шва, 1 = 10 мм)
       *_Displacement8.jpg (8 біт — для Lumion, SketchUp)
+  textures/01_running_half_XL/ великий тайл 4,8×4,8 м (4000 px) для площ — повтор майже не видно
   textures/textures.json       фізичний розмір кожного тайла в мм
   previews/*_sphere.jpg        рендери сфер (Blender Cycles)
   dxf/<схема>.dxf              креслення 2,4×2,4 м з підрізкою + блок модуля, мм
@@ -101,6 +104,16 @@ Lumion 11 підтримує колір, нормалі та карту висо
 * **Twinmotion / Enscape / D5:** створіть матеріал, підставте карти за назвами, розмір тайла — з `textures.json`.
 * **3ds Max (DirectX), Unreal:** інвертуйте зелений канал нормалі (Flip Green / Y−).
 * **SketchUp:** Materials → Create → `*_BaseColor.jpg`, розмір — з таблиці; решта карт — у V-Ray/Enscape.
+
+## Візуалізація ТРЦ
+
+`blender/plyta_mall_scene.blend` — площа 220×220 м перед торговим центром, вимощена схемою «Ложкова ½» (текстура `01_running_half_XL`), сонце й небо Blender, скляна вітрина з освітленим інтер'єром. Відкрийте файл і натисніть F12 (Cycles), або перебудуйте:
+
+```bash
+blender -b -P plyta_400x200/tools/build_mall_scene.py -- --samples 128 --res 1920x1080 --scheme 01_running_half
+```
+
+Щоб показати іншу схему: `python3 plyta_400x200/tools/build_textures.py --only 04_herringbone90 --res 4000 --extent 4800 --suffix _XL`, потім `--scheme 04_herringbone90`.
 
 ## Як перенесено колормікс з фото
 

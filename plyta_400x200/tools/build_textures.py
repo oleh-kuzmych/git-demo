@@ -88,9 +88,11 @@ def stone_rng(x, y, ex, ey):
     return np.random.default_rng(int(hashlib.md5(key.encode()).hexdigest()[:8], 16))
 
 
-def render(scheme, res):
+def render(scheme, res, extent=None, suffix=""):
     px, py, stones = build(scheme)
     n, m = texture_extent(px, py)
+    if extent:  # великий тайл (напр. для площ): менше видно повтор
+        n, m = max(1, round(extent / px)), max(1, round(extent / py))
     ex, ey = n * px, m * py
     ppm = res / max(ex, ey)
     W, H = round(ex * ppm), round(ey * ppm)
@@ -278,9 +280,9 @@ def render(scheme, res):
     nrm = np.stack([-dhdx, dhdr, np.ones_like(height)], -1)
     nrm /= np.linalg.norm(nrm, axis=-1, keepdims=True)
 
-    out = f"{ROOT}/textures/{scheme['id']}"
+    out = f"{ROOT}/textures/{scheme['id']}{suffix}"
     os.makedirs(out, exist_ok=True)
-    pre = f"{out}/{scheme['id']}"
+    pre = f"{out}/{scheme['id']}{suffix}"
     u8 = lambda x: np.clip(x, 0, 255).astype(np.uint8)
     Image.fromarray(u8(rgb)).save(f"{pre}_BaseColor.jpg", quality=92)
     Image.fromarray(u8((nrm + 1) * 127.5)).save(f"{pre}_Normal.jpg", quality=93)
@@ -296,15 +298,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--res", type=int, default=2048)
     ap.add_argument("--only")
+    ap.add_argument("--extent", type=float, help="розмір тайла, мм (напр. 4800)")
+    ap.add_argument("--suffix", default="", help="суфікс папки, напр. _XL")
     args = ap.parse_args()
     meta_path = f"{ROOT}/textures/textures.json"
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
     for s in SCHEMES:
         if args.only and s["id"] != args.only:
             continue
-        meta[s["id"]] = render(s, args.res)
-        meta[s["id"]]["displacement_range_mm"] = DISP_RANGE
-        print(s["id"], meta[s["id"]], flush=True)
+        key = s["id"] + args.suffix
+        meta[key] = render(s, args.res, args.extent, args.suffix)
+        meta[key]["displacement_range_mm"] = DISP_RANGE
+        print(key, meta[key], flush=True)
     os.makedirs(os.path.dirname(meta_path), exist_ok=True)
     json.dump(meta, open(meta_path, "w"), indent=1)
 

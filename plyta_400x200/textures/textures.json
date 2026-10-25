@@ -148,5 +148,20 @@
    1
   ],
   "displacement_range_mm": 10.0
+ },
+ "01_running_half_XL": {
+  "texture_mm": [
+   4800,
+   4800
+  ],
+  "texture_px": [
+   4000,
+   4000
+  ],
+  "repeats": [
+   12,
+   12
+  ],
+  "displacement_range_mm": 10.0
  }
 }
